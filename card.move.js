@@ -93,12 +93,13 @@ function afterPlayerMove(movedCard, sourceParent, target = null) {
  * @param {DragEvent} e
  */
 function handleDrop(e) {
-    e.preventDefault();
+    // Verhindert Standard-Verhalten des Browsers
+    if (e.cancelable) e.preventDefault();
     if (!canAct()) return;
 
     const target = e.currentTarget;
     const cardId = e.dataTransfer.getData('text');
-    const card   = document.querySelector(`[data-card-id="${cardId}"]`);
+    const card = document.querySelector(`[data-card-id="${cardId}"]`);
 
     if (!card || !validateMove(card, target)) return;
 
@@ -140,6 +141,9 @@ function handleDrop(e) {
  * @param {MouseEvent} e
  */
 function handleMoveLogic(e) {
+    // Verhindert Standard-Verhalten des Browsers
+    if (e.cancelable) e.preventDefault();
+
     if (!canAct()) return;
 
     const card = e.currentTarget;

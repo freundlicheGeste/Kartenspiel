@@ -474,3 +474,11 @@
     animation: dustExplosion 0.8s forwards ease-out;
     user-select: none;
 }
+
+/* Verhindert, dass der Browser das Scrollen/Zoomen startet, 
+   während man Karten bewegt */
+.card, .slot, #game-board {
+    touch-action: none;
+    user-select: none; /* Verhindert Textmarkierungen beim Ziehen */
+    -webkit-user-select: none;
+}
