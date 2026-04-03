@@ -93,8 +93,7 @@ function afterPlayerMove(movedCard, sourceParent, target = null) {
  * @param {DragEvent} e
  */
 function handleDrop(e) {
-    // Verhindert Standard-Verhalten des Browsers
-    if (e.cancelable) e.preventDefault();
+    e.preventDefault();
     if (!canAct()) return;
 
     const target = e.currentTarget;
@@ -141,9 +140,6 @@ function handleDrop(e) {
  * @param {MouseEvent} e
  */
 function handleMoveLogic(e) {
-    // Verhindert Standard-Verhalten des Browsers
-    if (e.cancelable) e.preventDefault();
-
     if (!canAct()) return;
 
     const card = e.currentTarget;

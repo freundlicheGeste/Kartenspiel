@@ -126,6 +126,8 @@ function initStorage() {
     resetGame();
 
     document.body.classList.add('lock-scroll');
+
+    card.addEventListener('pointerdown', handlePointerDown);
 }
 
 // Lokalen Speicher direkt beim Laden der Datei initialisieren
@@ -149,6 +151,29 @@ function checkReloadPenalty() {
         // Sofort speichern, damit der "bestrafte" Zustand fixiert ist
         saveToDisk();
     }
+}
+
+function handlePointerDown(e) {
+    const card = e.currentTarget;
+    if (card.classList.contains('back')) return;
+
+    // Zeitmessung für Unterscheidung Klick vs. Drag
+    const startTime = Date.now();
+
+    const onPointerUp = (upEvent) => {
+        const duration = Date.now() - startTime;
+
+        // Wenn nur kurz getippt wurde (< 200ms) -> Behandle es als Klick (deine handleMoveLogic)
+        if (duration < 200) {
+            handleMoveLogic(e);
+        } else {
+            // Hier käme deine Drag-End-Logik hin
+        }
+
+        window.removeEventListener('pointerup', onPointerUp);
+    };
+
+    window.addEventListener('pointerup', onPointerUp);
 }
 
 const COIN_SVG_CODE = `
