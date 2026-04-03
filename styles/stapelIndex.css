@@ -1,0 +1,51 @@
+/* Farbe basierend auf der Klasse am Karten-Element */
+.card.hearts, 
+.card.diamonds,
+.card[data-color="red"] {
+    color: #e53935 !important; /* Ein schönes Kartenspiel-Rot */
+}
+
+/* Falls du b-Tags für die Zahlen nutzt */
+.card.hearts b, 
+.card.diamonds b {
+    color: #e53935 !important;
+}
+
+.card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    box-sizing: border-box;
+    cursor: grab;
+    height: var(--card-height);
+    padding: 8px;
+    position: absolute;
+    /*transition: left 0.6s, top 0.6s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);*/
+    width: var(--card-width);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card.moving {
+    pointer-events: none;
+}
+
+.card.back {
+    background: repeating-linear-gradient(45deg, #1565c0, #1565c0 10px, #1e88e5 10px, #1e88e5 20px);
+    border: 2px solid white;
+    cursor: default;
+}
+
+.red {
+    color: #d32f2f;
+}
+
+.black {
+    color: #212121;
+}
+
+/* Ergänzung für den Shuffle-Effekt */
+.card.shuffling {
+    pointer-events: none;
+    box-shadow: 0 0 15px var(--accent-color);
+}

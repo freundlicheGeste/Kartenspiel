@@ -1,0 +1,108 @@
+Eigenschaften für Elemente erweitern
+(zb erster Eintrag in einem Bereich)
+
+Beispiel Eingabe-Text-Felder:
+
+-- CSS --
+.base-panel .input-text {
+    /* andere Eigenschaften */
+    margin-top: 8px; /* alle Textboxen sollen einen Abstand zur vorherigen Textbox haben */
+}
+
+/* übernimmt alle Eigenschaften von .input-text und überschreibt die Margin */
+/* alternativ könnte man auch noch zusätzliche Eigenschaften hinzufügen */
+.base-panel .input-text.first-row {
+    margin-top: 0px; /* der erste Eintrag soll keinen Abstand haben */
+}
+
+-- HTML --
+<h3 class="panel-section-title">INPUT SMALL</h3>
+
+<div class="container-multi">
+    <input type="text" class="input-text" placeholder="Small INPUT" value="">
+</div>
+
+<h3 class="panel-section-title">BEREICH</h3>
+<div class="input-container">
+    <input type="text" class="input-text .first-row" placeholder="Wert 1" value="">
+    <input type="text" class="input-text" placeholder="Wert 2" value="">
+</div>
+#########################################################################################
+#########################################################################################
+
+// Test-Konsole für das UI-Panel
+document.addEventListener('keydown', function (event) {
+    // Taste 'L' für Level Up
+    if (event.key.toLowerCase() === 'l') {
+        console.log("Debug: Trigger Level Up...");
+        triggerLevelUp();
+    }
+
+    // Taste 'P' für Progress (setzt ihn auf 100%)
+    if (event.key.toLowerCase() === 'p') {
+        console.log("Debug: Progress auf 100% setzen...");
+        updatePanelProgress(100);
+    }
+
+    // Taste 'R' für Progress-Reset (setzt ihn auf 0%)
+    if (event.key.toLowerCase() === 'r') {
+        console.log("Debug: Progress Reset...");
+        updatePanelProgress(0);
+    }
+
+    // Taste 'S' für Shake (triggert alle gesperrten Belohnungen)
+    if (event.key.toLowerCase() === 's') {
+        console.log("Debug: Trigger Shake on Locked Items...");
+        const lockedItems = document.querySelectorAll('.reward-plate.locked');
+        lockedItems.forEach(item => {
+            const icon = item.querySelector('.reward-icon');
+            item.classList.add('shake-it');
+            if (icon) icon.classList.add('shake-it');
+            /*
+                        // Audio-Feedback für den Test
+                        const soundLocked = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+                        soundLocked.volume = 0.3;
+                        soundLocked.play();
+            */
+            setTimeout(() => {
+                item.classList.remove('shake-it');
+                if (icon) icon.classList.remove('shake-it');
+            }, 400);
+        });
+    }
+
+    // Taste 'T' für Toggle & Radio Test (FIXED)
+    if (event.key.toLowerCase() === 't') {
+        console.log("Debug: Toggling Checkboxes and Radios...");
+
+        // 1. Checkboxen (Toggles) umschalten
+        document.querySelectorAll('.toggle-group-header input[type="checkbox"]').forEach(cb => cb.checked = !cb.checked);
+
+        // 2. Radio Buttons (Wechselt zur nächsten Option in jeder Gruppe)
+        const radioGroups = {};
+        document.querySelectorAll('input[type="radio"]').forEach(r => {
+            if (!radioGroups[r.name]) radioGroups[r.name] = [];
+            radioGroups[r.name].push(r);
+        });
+
+        for (let groupName in radioGroups) {
+            const group = radioGroups[groupName];
+            const currentIndex = group.findIndex(r => r.checked);
+            const nextIndex = (currentIndex + 1) % group.length;
+            group[nextIndex].checked = true;
+        }
+
+        new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3').play();
+    }
+
+    // Taste 'B' für Button-Test (Simuliert visuellen Klick)
+    if (event.key.toLowerCase() === 'b') {
+        console.log("Debug: Simulating Button Click...");
+        const firstBtn = document.querySelector('.btn-group-header');
+        if (firstBtn) {
+            firstBtn.style.background = "rgba(255, 215, 0, 0.3)";
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3').play();
+            setTimeout(() => { firstBtn.style.background = ""; }, 150);
+        }
+    }
+});

@@ -1,0 +1,792 @@
+:root {
+    --accent-color: #ffd700;
+    --accent-color-dark: #b8860b;
+    --bonus-color: #00ff41;
+    --penalty-color: #ff4d4d;
+
+    --header-title-color: white;
+    --header-background-color: #293327;
+    --header-border-color: #53531f;
+
+    --group-border-color: rgba(255, 215, 0, 0.4);
+    --group-border-radius: 8px;
+
+    --content-text-color: #e0e0e0;
+    --content-background-color: #1a2419;
+    --content-border-color: #53531f;
+    --content-hover-color: rgba(255, 215, 0, 0.05);
+
+    --table-striped-background-color: rgb(23, 33, 27);
+
+    --slider-on-background-color: rgba(255, 215, 0, 0.4);
+    --slider-off-background-color: rgba(0, 0, 0, 0.3);
+    --slider-off-border-color: rgba(255, 215, 0, 0.3);
+    --slider-off-dot-color: rgba(255, 216, 0, 0.2);
+
+
+    /* noch ungenutzt */
+    --panel-border-opacity: rgba(255, 215, 0, 0.4);
+    --unity-height: 38px;
+    --unity-padding: 10px;
+}
+
+/* ==========================================================================
+   ALLGEMEINE WERTE (für alle nutzbar)
+   ========================================================================== */
+/* Diese Klasse sorgt für Gleichheit bei Schrift, Größe und Abständen */
+
+.base-panel .ui-container {
+    /* Reset Browser-Defaults */
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0;           /* WICHTIG: Entfernt das Standard-Padding im Button-Inneren */
+    margin: 0;            /* Verhindert ungewollte Außenabstände */
+    cursor: pointer;
+    font: inherit;        /* Übernimmt die Schrift der Umgebung */
+    text-align: left;     /* Buttons zentrieren Text oft standardmäßig */
+    width: 100%;          /* Falls er die volle Breite einnehmen soll */
+    display: block;       /* Verhält sich dann wie ein Div */
+
+
+    background: var(--content-background-color);
+    border: 1px solid var(--group-border-color);
+    border-radius: var(--group-border-radius);
+    outline: none;
+    overflow: hidden;
+}
+
+/* Titel-Bereich (Header, für alle Controls) */
+.base-panel .ui-header {
+    background: var(--header-background-color);
+    border-bottom: 1px solid var(--header-border-color);
+    box-sizing: border-box;
+    color: var(--header-title-color);
+    display: block;
+    font-family: sans-serif;
+    font-size: 0.7em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 6px 10px 4px 10px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.base-panel .ui-content {
+    background: var(--content-background-color);
+    border:none;
+    color: var(--content-text-color);
+    padding: 8px 10px;
+    font-family: monospace;
+    font-size: 0.9em;
+    outline: none;
+    width: 100%;
+}
+
+.base-panel .ui-content:hover {
+    background: var(--content-hover-color);
+    color: var(--content-text-color);
+}
+
+/* Farb-Klassen für Wörter */
+.base-panel .highlight-gold { color: var(--accent-color) !important; }
+.base-panel .highlight-green { color: var(--bonus-color) !important; }
+.base-panel .highlight-red { color: var(--penalty-color) !important; }
+
+.base-panel .highlight-combo { color: rgb(109, 213, 217) !important; }
+.base-panel .highlight-bonus { color: rgb(215, 45, 187) !important; }
+.base-panel .highlight-achievment { color: rgb(45, 215, 144) !important; }
+.base-panel .highlight-streak { color: rgb(215, 158, 45) !important; }
+
+/* ==========================================================================
+   TEXTBOX
+   ========================================================================== */
+
+.base-panel .textbox-content {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   ACCORDION (Zusammenklappbare Textbox)
+   ========================================================================== */
+
+/* ui-header muss für accordion angepasst werden */
+.base-panel .accordion-header {
+    background: transparent;
+}
+
+.base-panel .accordion-content {
+    display: none; /* Standardmäßig zu */
+}
+
+.base-panel .accordion-group {
+    align-items: center;
+    background: var(--header-background-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    transition: background 0.2s;
+}
+
+.base-panel .accordion-group:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+/* Der Pfeil für das Accordion */
+.base-panel .accordion-group .arrow-gold {
+    color: var(--accent-color);
+    margin-right: 10px;
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+}
+
+.base-panel .ui-container.open .accordion-group .arrow-gold {
+    color: var(--accent-color-dark);
+    transform: rotate(180deg);
+}
+
+/* Zustand: Offen */
+.base-panel .ui-container.open .accordion-group {
+    border-bottom: 1px solid var(--header-border-color);
+}
+
+.base-panel .ui-container.open .ui-content {
+    display: block;
+}
+
+/* ==========================================================================
+   STATUS TABLE (Mit schmaler Wert-Spalte)
+   ========================================================================== */
+
+.base-panel .status-row {
+    display: grid;
+    /* Standard: Breite Spalte links (1fr), Schmale Spalte rechts (60px) */
+    grid-template-columns: 1fr 60px; 
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* Optionale Klasse zum Tauschen der Spalten */
+.base-panel .status-row.reverse {
+    grid-template-columns: 60px 1fr;
+}
+
+.base-panel .status-row:last-child { 
+    border-bottom: none; 
+}
+
+.base-panel .status-cell {
+    align-items: center;
+    background: var(--content-background-color);
+    color: var(--content-text-color);
+    display: flex;
+    font-family: monospace;
+}
+
+/* Die schmale Spalte (für Werte oder Level-Nummern) */
+.base-panel .status-value {
+    background: var(--header-background-color);
+    border-left: 1px solid var(--header-border-color);
+    color: var(--content-text-color);
+    font-size: 1.2em;
+    font-weight: bold;
+    justify-content: center;
+}
+
+/* Wenn getauscht, Border anpassen */
+.base-panel .status-row.reverse .status-value {
+    border-left: none;
+    border-right: 1px solid var(--header-border-color);
+}
+
+/* Progressbar Integration für die Zelle */
+.base-panel .status-cell .progress-container {
+    margin: 0;
+    height: 14px;
+}
+
+/* ==========================================================================
+   PROGRESS BAR (for Status Table)
+   ========================================================================== */
+
+.base-panel .progress-container {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-color-dark);
+    border-radius: 20px;
+    height: 12px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.base-panel .progress-fill {
+    background: linear-gradient(90deg, var(--accent-color-dark), var(--accent-color));
+    box-shadow: 0 0 10px var(--accent-color-dark);
+    height: 100%;
+    width: 75%; /* Hier per JS oder Inline-Style den %-Wert setzen */
+    /* Animation */
+    transition: width 0.5s ease-in-out;
+}
+
+/* ==========================================================================
+   GRID TABLE (Horizontale Spalten-Ansicht)
+   ========================================================================== */
+
+/* Der Header der Tabelle (Die Spaltenbeschriftungen) */
+.base-panel .table-grid-header {
+    display: grid;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--header-border-color);
+    color: var(--content-text-color);
+    font-family: sans-serif;
+    font-size: 0.7em;
+    font-weight: bold;
+    grid-template-columns: 1fr 1.5fr 1fr; /* 3 Spalten: Schmal | Breit | Schmal */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+}
+
+.base-panel .table-grid-header div {
+    border-right: 1px solid var(--content-border-color);
+    padding-top: 7px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* Die Daten-Zeilen */
+.base-panel .table-grid-row {
+    background: var(--content-background-color);
+    border-bottom: 1px solid var(--content-border-color);
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr; /* Muss exakt dem Header entsprechen */
+    transition: all 0.2s;
+}
+
+.base-panel .table-grid-row:last-child {
+    border-bottom: none;
+}
+
+/* Tabellen-Text (statt ui-content, etwas weniger padding und text mittig) */
+.base-panel .table-grid-row div {
+    align-items: center;
+    border-right: 1px solid var(--content-border-color);
+    color: var(--content-text-color);
+    display: block; /* mittig */
+    font-family: monospace;
+    font-size: 0.9em;
+    padding: 8px;
+    text-align: center;
+    /* um den content exakt wie bei den  anderen controls anzeigen zu lassen
+    padding: 10px;
+    text-align: left;
+    */
+}
+
+/* Entferne den rechten Border der letzten Spalte */
+.base-panel .table-grid-header div:last-child,
+.base-panel .table-grid-row div:last-child {
+    border-right: none;
+}
+
+/* Hover-Effekt für die ganze Zeile */
+.base-panel .table-grid-row:hover {
+    background: var(--content-hover-color);
+    color: var(--content-text-color);
+}
+
+/* ! ab hier controls für halbe panel breite ! */
+
+
+/* ==========================================================================
+   INPUT
+   ========================================================================== */
+
+/* hover noch hinzufügen */
+
+/* ==========================================================================
+   TABLE
+   ========================================================================== */
+
+.base-panel .striped {
+    background: var(--table-striped-background-color);
+    border-top: 1px solid var(--content-border-color);
+}
+
+/* ==========================================================================
+   CHECKBOX
+   ========================================================================== */
+
+.base-panel .toggle-container {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+}
+
+/* Verstecke das echte Checkbox-Input */
+.base-panel .toggle-container input {
+    display: none;
+}
+
+.base-panel .toggle-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Slider: AUS-Zustand Hintergrund + Rahmen */
+.base-panel .toggle-switch-slider {
+    background: var(--slider-off-background-color);
+    border: 1px solid var(--slider-off-border-color);
+    border-radius: 20px;
+    height: 14px;
+    position: relative;
+    width: 26px;
+    /* Animation */
+    transition: 0.3s;
+}
+
+/* Slider: AUS-Zustand Kreis */
+.base-panel .toggle-switch-slider:before {
+    background: var(--slider-off-dot-color);
+    border-radius: 50%;
+    bottom: 1px;
+    content: "";
+    height: 10px;
+    left: 1px;
+    position: absolute;
+    width: 10px;
+    /* Animation */
+    transition: 0.3s;
+}
+
+.base-panel .toggle-container input:checked + .toggle-content {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Slider: AN-Zustand Hintergrund + Rahmen */
+.base-panel .toggle-container input:checked + .toggle-content .toggle-switch-slider {
+    background: var(--slider-on-background-color);
+    border-color: var(--accent-color);
+}
+
+/* Slider: AN-Zustand Kreis */
+.base-panel .toggle-container input:checked + .toggle-content .toggle-switch-slider:before {
+    background: var(--accent-color);
+    transform: translateX(12px);
+}
+
+/* ==========================================================================
+   RADIO BUTTON (Auswahl-Karten Design)
+   ========================================================================== */
+
+/* als Container, kann der toggle-container genutzt werden  */
+.base-panel .radio-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Der Text der Option */
+.base-panel .radio-label-text {
+    color: #a0a0a0;
+    transition: 0.3s;
+}
+
+/* Der visuelle Indikator (Der kleine Kreis rechts) */
+.base-panel .radio-indicator {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    position: relative;
+    transition: 0.3s;
+}
+
+/* Der Punkt im Inneren (leuchtet bei Auswahl) */
+.base-panel .radio-indicator::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 8px; height: 8px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    transition: 0.2s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+    box-shadow: 0 0 8px var(--accent-color);
+}
+
+/* 1. Den gesamten Inhaltsbereich stylen, wenn das Radio-Input checked ist */
+.base-panel .toggle-container input:checked + .ui-content {
+    background: rgba(255, 215, 0, 0.1); /* Dezenter goldener Hintergrund */
+}
+
+/* 2. Den Text (Konservativ / High Roller) hervorheben */
+.base-panel .toggle-container input:checked + .ui-content .radio-label-text {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* 3. Den Radio-Kreis (Indicator) stylen */
+.base-panel .toggle-container input:checked + .ui-content .radio-indicator {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+/* 4. Den inneren Punkt im Kreis sichtbar machen */
+.base-panel .toggle-container input:checked + .ui-content .radio-indicator::after {
+    background: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--accent-color);
+    content: "";
+    height: 8px;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1); /* Punkt erscheint */
+    width: 8px;
+}
+
+/* ==========================================================================
+   BUTTON
+   ========================================================================== */
+
+.base-panel .btn-container:hover {
+    border-color: var(--accent-color);
+    background: rgba(255, 215, 0, 0.05);
+    animation: goldGlowPulse 2s infinite ease-in-out;
+}
+
+/* Drücken-Effekt (Active): Wie Radio-Button Checked */
+.base-panel .btn-container:active {
+    background: rgba(255, 215, 0, 0.2) !important;
+    transform: scale(0.98); /* Leichtes Eindrücken-Gefühl */
+}
+
+.base-panel .btn-content {
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.base-panel .btn-label-text {
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* ==========================================================================
+   DROPDOWN BOX
+   ========================================================================== */
+
+.base-panel .dropdown-container .arrow-gold {
+    color: var(--accent-color);
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+    font-size: 0.5em;
+}
+
+/* Drehung wenn offen */
+.base-panel .dropdown-container.open .arrow-gold {
+    transform: rotate(180deg);
+}
+
+/* Der Hauptcontainer */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+    user-select: none;
+    z-index: 100;
+}
+
+/* Klasse zum Öffnen */
+.dropdown-container.open .dropdown-options {
+    display: block;
+    animation: dropdownFade 0.2s ease-out;
+}
+
+/* Die Liste der Optionen (standardmäßig versteckt) */
+.dropdown-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background: var(--content-background-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    
+    /* SCROLL-OPTIONEN */
+    max-height: 200px;    /* Maximale Höhe, bevor gescrollt wird */
+    overflow-y: auto;     /* Aktiviert das vertikale Scrollen */
+    
+    display: none; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 1000;
+}
+
+/* Einzelne Option */
+.option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 15px;
+    color: var(--content-text-color);
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    font-size: 0.9em;
+}
+
+.option:last-child { border-bottom: none; }
+
+.option:hover {
+    background: var(--content-hover-color);
+    color: var(--accent-color);
+}
+
+/* Custom Scrollbar für die Dropdown-Liste */
+.base-panel .dropdown-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.base-panel .dropdown-options::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.base-panel .dropdown-options::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   CARD PREVIEW (Spezifisch für Dropdowns)
+   ========================================================================== */
+
+.base-panel .card-preview {
+    width: 24px;
+    height: 34px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hover-Effekt innerhalb der Option */
+.base-panel .option:hover .card-preview {
+    border-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+/* Rücken-Designs */
+.base-panel .preview-blue {
+    background: repeating-linear-gradient(45deg, #1565c0, #1565c0 4px, #1e88e5 4px, #1e88e5 8px);
+}
+
+.base-panel .preview-red {
+    background: repeating-linear-gradient(45deg, #d32f2f, #d32f2f 4px, #f44336 4px, #f44336 8px);
+}
+
+.base-panel .preview-gold {
+    /* Nutzt deine bestehenden Variablen für Gold */
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
+}
+
+@keyframes goldGlowPulse {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+        border-color: rgba(255, 215, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        border-color: rgba(255, 215, 0, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+        border-color: rgba(255, 215, 0, 0.4);
+    }
+}
+
+/* ==========================================================================
+   REWARDS & LEVEL UP
+   ========================================================================== */
+
+/* Container für die Liste innerhalb der Sektion */
+.base-panel .reward-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 10px 0; /* An das Panel-Padding angepasst */
+}
+
+/* Basis-Stil der Platte */
+.base-panel .reward-plate {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Freigeschaltet: Akzent-Rand und Glow */
+.base-panel .reward-plate.unlocked {
+    border: 1px solid var(--accent-color);
+    background: rgba(255, 215, 0, 0.05);
+}
+
+/* Gesperrt: Ausgegraut */
+.base-panel .reward-plate.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.base-panel .reward-icon {
+    font-size: 1.8em;
+    margin-right: 15px;
+}
+
+.base-panel .reward-content {
+    flex: 1;
+}
+
+.base-panel .reward-title {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.base-panel .reward-desc {
+    color: var(--content-text-color);
+    font-size: 0.8em;
+    margin: 2px 0 4px 0;
+    opacity: 0.8;
+}
+
+.base-panel .reward-status {
+    color: var(--accent-color-dark);
+    font-size: 0.65em;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+/* Hover-Effekt für Unlocked */
+.base-panel .reward-plate.unlocked:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.1);
+    cursor: pointer;
+}
+
+/* Glanz-Animation */
+.base-panel .reward-plate.unlocked::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 50%;
+    height: 200%;
+    background: linear-gradient(to right, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transform: rotate(25deg);
+    animation: shineSweep 6s infinite;
+}
+
+@keyframes shineSweep {
+    0% { left: -150%; }
+    15% { left: 150%; }
+    100% { left: 150%; }
+}
+
+/* ==========================================================================
+   KEYBOARD SHORTCUT TABLE
+   ========================================================================== */
+
+/* Styling für die Tasten-Symbole */
+kbd {
+    background-color: #333;
+    border-radius: 4px;
+    border: 1px solid #555;
+    box-shadow: 0 2px 0 #111;
+    color: #eee;
+    display: inline-block;
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 6px;
+    white-space: nowrap;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0 2px;
+    min-width: 22px; /* Verhindert, dass schmale Tasten wie 'I' zu dünn wirken */
+    text-align: center; /* Zentriert die Buchstaben/Icons */
+    min-height: 18px; /* Verhindert, dass hohe Buchstaben, wie 'Q' zu nah am Rand kleben */
+}
+
+/* Tabelle für die Shortcuts */
+.shortcut-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.shortcut-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.shortcut-table td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+/* Raster für die Experten-Kürzel */
+.shortcut-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 0.8em;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #bbb;
+}
+
+.shortcut-item span {
+    color: #777;
+    font-style: italic;
+}
+
+.hint-text-small {
+    font-size: 0.75em;
+    color: #555;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* ==========================================================================
+   AUDIO SLIDER
+   ========================================================================== */
+
+.kts-slider {
+    width: 100px;
+    accent-color: var(--accent-color); /* Nutzt dein Gold/Magenta */
+    cursor: pointer;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}

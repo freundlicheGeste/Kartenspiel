@@ -1,0 +1,307 @@
+:root {
+    /* Karten & Spielfeld */
+    --z-cards: 10;
+    --z-card-active: 100;
+
+    /* UI (Buttons, Bars etc.) */
+    --z-ui: 1000;
+
+    /* Effekte (Partikel etc.) */
+    --z-effects: 5000;
+
+    /* Animationen (bewegte Karten etc.) */
+    --z-anim: 9000;
+
+    /* Overlay (Win Screen, Modals etc.) */
+    --z-overlay: 20000;
+}
+
+/* =========================================================
+   🃏 SPIEL (Basis)
+========================================================= */
+
+.column,
+.foundation,
+#waste-pile {
+    z-index: var(--z-cards);
+    position: relative;
+}
+
+#stock-pile { /* Höherer Z-Index als das Waste-Pile, damit fliegende Kinder obenauf liegen */
+    z-index: calc(var(--z-cards) + 1);
+    position: relative; /* muss für das SVG Hintergrundbild relativ sein */
+}
+
+/* unter den Karten () */
+#stock-pile::before,
+#waste-pile::before {
+    z-index: calc(var(--z-cards) - 1);
+    position: absolute; /* muss für das SVG Hintergrundbild absolute sein */
+}
+
+.card {
+    z-index: var(--z-cards);
+    position: absolute;
+}
+
+/* =========================================================
+   🃏 AKTIVE KARTEN
+========================================================= */
+
+.column:has(.moving),
+.foundation:has(.moving),
+.column:has(.ui-draggable-dragging),
+.foundation:has(.ui-draggable-dragging) { /* Wenn eine Karte in einer Spalte bewegt wird, muss diese Spalte kurzzeitig  über den anderen stehen */
+    z-index: var(--z-anim) !important;
+}
+
+.card.moving,
+.card.ui-draggable-dragging,
+.card.fly-to-waste,
+.flip-animate {
+    z-index: var(--z-anim);
+}
+
+.stock-dealing-animation {
+    z-index: var(--z-anim);
+    position: absolute !important;
+}
+
+/* =========================================================
+   🧠 KARTEN SPECIAL STATES
+========================================================= */
+
+.card.on-top {
+    z-index: var(--z-anim);
+    position: relative;
+}
+
+.card.protected {
+    z-index: var(--z-card-active);
+    position: relative;
+}
+
+.card-undo-glide {
+    z-index: var(--z-anim);
+}
+
+/* =========================================================
+   ✨ EFFEKTE (Particles etc.)
+========================================================= */
+
+.redo-particle,
+.coin-particle,
+.falling-card,
+.victory-card {
+    z-index: var(--z-effects);
+    position: fixed;
+}
+
+/* =========================================================
+   🎮 UI (Buttons, Bars etc.)
+========================================================= */
+
+#controls,
+.start-screen,
+.time-console,
+.coin-display-bottom,
+.info-bar, /* hinter der status bar */
+.info-bar-base, /* hinter der status bar */
+.best-stats-bar {
+    z-index: var(--z-ui);
+    position: absolute; /* Orientierung am app-wrapper */
+}
+
+/* =========================================================
+   📊 STATUS / INFO
+========================================================= */
+
+#status-bar {
+    z-index: calc(var(--z-ui) + 10);
+    position: absolute; /* Orientierung am app-wrapper */
+}
+
+.info-ticker {
+    z-index: calc(var(--z-ui) + 20);
+    position: fixed;
+}
+
+/* =========================================================
+   💡 HINWEIS SYSTEM
+========================================================= */
+
+.hint-source-highlight {
+    z-index: calc(var(--z-anim) + 100);
+}
+
+#hint-bulb {
+    z-index: var(--z-ui);
+}
+
+/* =========================================================
+   🏆 OVERLAY (Top Layer)
+========================================================= */
+
+#scoreboard-overlay,
+.level-up-card {
+    z-index: var(--z-overlay);
+    position: fixed;
+}
+
+/* Scoreboard Titel Karten*/
+.letter-card:hover {
+    z-index: calc(var(--z-overlay) + 10);
+}
+
+/* Muss IMMER klickbar oben sein → daher leicht höher */
+#scoreboard-overlay .close-btn {
+    z-index: calc(var(--z-overlay) + 20);
+    position: absolute;
+}
+
+/* Das ist ein Overlay → aber UNTER dem eigentlichen Startscreen */
+#start-screen-overlay {
+    z-index: calc(var(--z-overlay) - 10);
+    position: fixed;
+}
+
+#start-screen-overlay .main-logo-watermark {
+    z-index: calc(var(--z-overlay) - 20);
+    position: absolute;
+}
+
+/* =========================================================
+   🪙 SONDERFÄLLE
+========================================================= */
+
+.game-message {
+    z-index: var(--z-effects);
+    position: absolute;
+}
+
+
+
+
+
+
+
+
+/* HINGEROOTZT Das ist der Code fürs Win Banner, dass die Zeilen von oben einfliegen und die Punkte rechtsbüdnig sind */
+.icon {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+.score-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 16px;
+    font-family: monospace;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.value {
+    text-align: right;
+}
+
+/* TOTAL extra hervorheben */
+.total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,215,0,0.2);
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+.row {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+}
+
+/* wird per JS gesetzt */
+.row.show {
+    animation: rowDrop 0.35s cubic-bezier(.2, .8, .2, 1) forwards;
+}
+
+@keyframes rowDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.95);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(2px) scale(1.03);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* TOTAL leicht später & stärker */
+.total {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.9);
+}
+
+.total.show {
+    animation: totalPop 0.45s ease forwards;
+}
+
+@keyframes totalPop {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.9);
+    }
+    70% {
+        transform: scale(1.08);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.details-list .row {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+/* HINGEROTZT Das ist fürs Win Banner damit die COMBOS bündig zu den Zügen und der Zeit angezeigt werden */
+.detail-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px; /* optional, etwas Abstand zwischen Zeilen */
+}
+
+.combo-right {
+    min-width: 164px; /* feste Breite, so dass beide Combo-Spalten exakt untereinander stehen */
+    text-align: left;  /* Zahl linksbündig in rechter Spalte */
+}

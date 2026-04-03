@@ -1,0 +1,283 @@
+XPManager & GameStateManager nutzen !
+
+
+Stelle sicher, dass clearHints() auch am Ende von executeMoveToFoundation und executeMoveToTableau aufgerufen wird, um sicherzugehen, dass nach der Animation alles sauber ist.
+
+zeit im gewinn fenster höher als in stats leiste
+
+im info panel dem spieler max 20 undos anzeigen bzw den MAX wert direkt, falls man den im code mal ändert
+
+purist icon in der ui anzeigen, wenn der spieler ohne hilfen spielt
+dass er sieht, dass er den bonus bekommt, mit weiteren freischaltungen pro level oder session, evtl eine icon bar
+
+flip counter und foundation counter animiert auch wie tipp oder undo redo bar
+die anzeigen vom zindex vor die karten
+
+noch so ein badge icon machen für tipps
+mit animierter birne, badge solange gratis tipps, wieviele noch verbleiben
+nur wenn auto tipps aus ist
+
+
+letzte karte des stock stapels hängt fest bei der animation
+evtl wegen cursor hand setzen? dann mit timeout
+button bar fliegt von unten rechts ein deaktivieren
+stattdessen nach dem laden kurz von links nach rechts einfahren
+dass der nutzer sieht er kann da eine bar ausfahren
+
+
+console.log(JSON.stringify(undoStack).length / 1024 + " KB");
+Speicherplatz, den die UNDOs benötigen
+
+DEV - STEP muss noch bei auto flip und auto foundation eingebaut werden
+data-points-given funktioniert nur ohne auto-Ablegen, noch einbauen
+
+
+"Karten aus der Foundation müssen gezogen (Drag) werden." im banner für den spieler anzeigen
+
+
+buttons deaktivieren !!!!!!! bei gestartet !!!!!!!!!
+
+
+IDEE für schnelleres auto-solve:
+wenn der button geklickt wird, alle noch auf dem stock befindlichen karten auf den waste stapel,
+da wird er dann von auto-ablegen automatisch rüber gezogen.
+aber testen, ob es auch ohne autofoundation bool klappt
+
+
+TESTS für Annika (andere Spieler):
+manuelle Tipps: verschiedene Nachrichten, wenn kein Zug möglich
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Soll ich dir noch helfen, die registerGameEnd Funktion so zu erweitern, 
+dass sie die Anzahl der Auto-Solves trackt (vielleicht für ein Achievement "Faulpelz-König")?
+
+
+
+NERD-Display:
+kts.game.winStreak
+kts.game.activeGameInProgress
+Foundation Bonus
+Explorer Bonus
+
+wenn stock leer war bleibt beim ersten undo das zeichen auf dem einzelnen kartenrücken
+
+
+auto solve sobald tableau alle umgedreht sind
+hardcoded deck 19 perfekt für könig auf freies tableau check
+
+
+GEMINI:
+Soll ich dir noch zeigen, wie du den moveCount in deinem UI (z.B. in einer Statusleiste) einblendest, anstatt nur in der Konsole?
+:GEMINI
+
+wenn fast hints an ist keine bulb animation
+hint bevorzugt tableau zu tableau statt ass zu foundation
+hint umrandung flackert bei fast hints anstatt dauerhaft anzuzeigen bis spieler aktion ausführt
+
+wie lange hat man zeit für explorer bonus (3s)
+bonus punkte, wenn man eine tableau reihe voll hat +10
+bonus punkte für 2 leere tableau plätze
+
+
+gameState.is(GameStates.RUNNING)
+gameState.set(GameStates.RUNNING);
+
+foundation strike und explorer auch punkte geben evtl +2
+
+0.9.8 TODO:
+styles/design/carddesign wieder auf neues umstellen und in settingsPanel applydesign, dass es gleich angewandt wird
+
+↺
+
+
+
+
+- Auto-Finish Button und info-ticker wieder aktivieren
+- localStorage Variablen sinnvoller benennen
+
+document.querySelectorAll('.hint-highlight, .hint-source-highlight, .hint-target-highlight')
+        .forEach(el => el.classList.remove('hint-highlight', 'hint-source-highlight', 'hint-target-highlight'));
+
+- get rid of: toggleRewards / toggleBanner.js
+
+genereated #14 löschen
+
+extra punkte, wenn jmd im tableau erst einen kompletten stapel voll macht, bevor er ihn aufs tableau schickt
+15 punkte von tableau zu foundation (belohnung für leute, die kein auto-legen nutzen)
+
+
+auto finish so optimieren, dass er direkt beginnt wenn alle tableau karten aufgedeckt sind
+egal wie viele noch auf dem stock pile liegen
+
+Option nicht nur replay zu nutzen sondern sich aus einer liste aller decks eines zum spielen auszusuchen
+funktion um die unlocked rewards im kts auch zu updaten, basierend auf dem spieler level
+
+
+benutzername buchstaben limitieren
+play levelup sound noch auf volume stellen
+
+----------------------------------
+
+da nicht alle sounds gleich laut klingen, vol in der function einstellen
+und den master vol in settings nur nutzen um das function interne vol um so und so viel zu erhöhen/verringern
+
+Soll ich dir noch helfen, einen "Daily Challenge" Banner zu erstellen, der einmal am Tag ein spezielles Kartendeck oder besondere Regeln vorschlägt?
+
+
+Local Storage löschen und durch Template ersetzen:
+Folgendes in Konsole tippen:
+localStorage.clear();
+localStorage.setItem('kts_storage', JSON.stringify(kts_template));
+location.reload(); // Seite neu laden, um die Änderungen zu übernehmen
+
+
+localStorage Werte manipulieren:
+kts.game.player.unlockedRewards = [2, 3];
+saveToDisk();
+location.reload();
+
+
+decksHardcoded.js
+infoMessage optisch noch an app anpassen
+
+gameOver.js
+muss in handleGameOverAction() noch der winStreak auf 0 gesetzt werden?
+
+win-banner open scoreboard noch als button hinzufügen
+
+
+-----------
+2026-03-08:
+scoreboard durschnittspunkte im footer sind falsch
+statt player, sollte ein player array im kts stehen
+gameregistration console.log group erstellen
+-----------
+2026-03-08:
+Belohnungssystem ausarbeiten, zuvor rewardPanel Fix
+totalGames nicht für die durchschnittspunkte nehmen, sondern plays aus den decks
+
+player wird falsch erkannt
+replay startet nicht das richtige deck
+zeit in der bar zeigt 1:58 aber im win banner 2:00
+time attack modus einbauen
+-----------
+
+
+
+SPIELREGELN:
+Farbe: Muss abwechselnd sein (Rot auf Schwarz oder Schwarz auf Rot).
+
+Wert: Die neue Karte muss genau um den Wert 1 niedriger sein als die Karte, auf der sie landet.
+
+König-Regel: Auf ein leeres Feld darf nur ein König (K) gelegt werden.
+
+So funktioniert das Ziel-System:
+
+    Die Asse: Du kannst ein Ass auf das entsprechende Feld oben ziehen.
+
+    Die Reihenfolge: Danach akzeptiert das Feld nur noch die 2 desselben Symbols, dann die 3, usw.
+
+    Sieg-Bedingung: Sobald alle vier Stapel bis zum König (K) gefüllt sind, hast du gewonnen.
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+BEZEICHNUNGEN:
+Foundations = Ablagestapel (vier Zielstapel)
+Nachziehstapel (Stock)
+Abwurfstapel (Waste)(waste-pile)
+Tableau = untere 7 Stapel
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+STATISTIK
+füge einen weiteren button "Statistik" hinzu. passend zu den anderen beiden bannern sollen hier die statistiken gelistet werden.
+
+Gesamtspielzeit aller Spiele
+Gespielte Spiele Anzahl
+
+Gewonnene Spiele Anzahl
+Gewonnene Spiele Prozent
+Gewonnene Spiele am Stück (Anzahl gespielter gewonnener Spiele bevor wieder ein Spiel verloren wurde, Wert nur ändern, wenn seit dem letzten Mal mehr Spiele am Stück gewonnen wurden, bis wieder eines verloren wurde)
+
+Schnellste Zeit für ein Spiel
+Durchschnittlich benötigte Zeit (berechnet anhand aller bisher gespielten Spiele)
+
+Geringste Anzahl Züge für ein Spiel
+Durchschnittlich benötigte Züge pro Spiel (berechnet anhand aller bisher gespielten Spiele)
+
+
+Ideen für das Highscore/Statistik Board:
+
+Wenn du das einbaust, hier sind Metriken, die Spieler lieben:
+
+    Win Rate: Verhältnis von gestarteten zu gelösten Spielen.
+
+    Bestzeit: Dein schnellster Sieg.
+
+    Wenigste Züge: Solitaire-Profis optimieren nicht auf Zeit, sondern auf die Anzahl der Klicks.
+
+    Serie (Streak): Wie viele Spiele in Folge wurden gewonnen?
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+PUNKTESYSTEM:
++10 Punkte      Kein undoLastMove() genutzt             "No-Undo" Streak
++05 Punkte      2 Karten in Folge aufgedeckt    Uncover-Streak
++20 Punkte      in unter 2:25 geschafft         Speed-Junkie (andere Bezeichnung überlegen)
++10 Punkte      kein Auto-Flip-Hint-Ablegen     Purist (Cheating muss noch vorgebeugt werden)
+
+
+PUNKTESYSTEM NÄCHSTE RUNDE:
+100 PUNKTE      Level unter 3min geschafft  "Early Bird" Startkapital
+
+
+
+FORTSCHRITT:
+keine Statistiken bisher
+Hintergünde BETA
+Kartenvorderseiten sind nur Änderungen der Schriftart
+
+TODO:
+Spielmodi
+Zeit läuft rückwärts. Spiel in unter 3min schaffen
+Time Attack
+
+
+PROBLEME v0.9.5:
+restartGame speichert die bonus punkte nicht, falls man in der zweiten oder höher Runde ist
+und es setzt den Rundenzähler nicht zurück auf 0, obwohl das wiederholen ja als aufgabe zu werten ist
+
+
+1. Gameplay-Boni (In-Game)Der "King's Landing"
+Bonus: Wenn ein König auf einen komplett leeren Slot im Spielfeld bewegt wird.
+Vorschlag: +15 Punkte.
+Das motiviert dazu, Spalten strategisch freizuräumen.
+
+"No-Undo" Streak: Belohne Spieler, die ohne Sicherheitsnetz spielen.
+Vorschlag: Alle 20 Züge ohne undoLastMove() gibt es einen Multiplikator auf den nächsten Move (z. B. $2\times$ Punkte für das nächste Ablegen).
+
+"Color Sweep": Wenn alle Karten einer Farbe (z. B. alle Herz-Karten) auf dem Foundation-Stapel liegen, bevor die anderen Farben zur Hälfte fertig sind.
+Vorschlag: +50 Punkte („Fokus-Bonus“).
+
+Die "Last-Second" Rettung: Wenn der shuffleRescue() genutzt wird und danach innerhalb von 30 Sekunden das Spiel gewonnen wird.
+Vorschlag: +100 Punkte (macht das Risiko des Punktabzugs durch Shuffle wett).
+
+
+2. "Next Game" Hooks (Session-Motivation)Damit der Spieler direkt auf „Nochmal spielen“ klickt, 
+kannst du Boni einführen, die sich auf das nächste Deck auswirken:Der 
+
+"Flying Start": Wenn das vorherige Spiel gewonnen wurde, 
+starten die Ase (und evtl. die 2er) im nächsten Spiel bereits auf den Foundation-Stapeln.
+Effekt: Das Spielfeld ist leerer und das Spiel beginnt schneller.
+
+Punkt-Inflation (Streak-Level): Jedes gewonnene Spiel in Folge erhöht den Basis-Wert aller Aktionen.
+Runde 1: Karte aufdecken = +5.Runde 2: Karte aufdecken = +7.Runde 3: Karte aufdecken = +10.
+
+"Early Bird" Startkapital: Wenn ein Spiel in unter 3 Minuten gewonnen wurde, 
+startet das nächste Spiel mit einem Konto von +100 Punkten statt 0.
+
+Design-Unlocks: Da du bereits verschiedene Kartenrücken (select-back) hast, 
+könnten besonders coole Designs (z.B. "Gold" oder "Neon") erst nach einer 3er-Siegesserie freigeschaltet werden.

@@ -1,0 +1,103 @@
+.start-screen {
+    top: 15vh;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.05); /* Ganz dezente Abdunkelung */
+    pointer-events: none; /* Klicks gehen durch das Overlay ans Board */
+    background: transparent;
+    top: 332px;
+}
+
+/* Dein spezifisches Logo-Overlay braucht eventuell noch Positionierung */
+#start-screen-overlay {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+/* Gemeinsame Logik für beide Overlays */
+.start-screen, #start-screen-overlay {
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Die Verstecken-Klasse für beide */
+.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none;
+}
+
+/* Wenn das Spiel startet, wirkt es wie ein Knopfdruck */
+.start-screen.hidden .engraved-text {
+    text-shadow: 
+        1px 1px 1px rgba(0, 0, 0, 0.5), 
+        -1px -1px 1px rgba(255, 255, 255, 0.2); /* Schatten kehrt sich kurz um */
+    transform: translateY(2px); /* Text senkt sich ab */
+}
+
+.engraved-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Abstand zwischen den Zeilen */
+    
+    font-family: monospace;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    
+    /* Eingestanzter Effekt */
+    color: rgba(0, 0, 0, 0.25); /* Farbe etwas dunkler als der Hintergrund */
+    text-shadow: 
+        -1px -1px 1px rgba(0, 0, 0, 0.4), /* Dunkle Kante oben/links */
+         1px 1px 1px rgba(255, 255, 255, 0.15); /* Helle Kante unten/rechts */
+}
+
+/* Optional: Damit die Taste im eingestanzten Look nicht zu hell ist */
+.engraved-text kbd {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3);
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.line { font-size: 1.2rem; }
+.line-key { font-size: 2rem; }
+
+/* Die Puls-Animation */
+@keyframes softPulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.03); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+.pulse-animation {
+    animation: softPulse 3s ease-in-out infinite;
+}
+
+#start-screen-overlay .main-logo-watermark {
+    top: 400px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    opacity: 0.1; /* Sehr dezent im Hintergrund */
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
+    transition: transform 3s ease-in-out infinite alternate;
+}
+
+/* Ein ganz dezentes Schweben für das Logo im Hintergrund */
+@keyframes float {
+    from { transform: translate(-50%, -50%) scale(1); }
+    to { transform: translate(-50%, -52%) scale(1.05); }
+}

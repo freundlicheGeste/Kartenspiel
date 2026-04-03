@@ -1,0 +1,64 @@
+/* Das äußere Overlay / Container */
+#rewards-panel.casino-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 450px;
+    height: auto;
+    max-height: 90vh;
+    background: rgba(42, 59, 38, 0.98); /* Casino-Grün */
+    backdrop-filter: blur(10px);
+    z-index: 17000; /* Höher als Scoreboard */
+    display: none; /* Wird via JS auf 'flex' gesetzt */
+    flex-direction: column;
+    border: 4px solid #ffd700;
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    overflow: hidden;
+    color: white;
+}
+
+/* Scroll-Bereich */
+.rewards-scroll-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.rewards-scroll-area {
+    flex: 1 1 auto; /* wächst, aber begrenzt durch max-height */
+    overflow-y: auto;
+}
+
+/* Belohnungs-Eintrag */
+.reward-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.reward-item.unlocked {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.reward-item.locked {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+
+.reward-icon { font-size: 1.5em; }
+.reward-info { text-align: left; }
+.reward-info strong { color: #ffd700; display: block; font-size: 0.9em; }
+.reward-info p { margin: 2px 0 0 0; font-size: 0.75em; color: #eee; }
+

@@ -1,0 +1,30 @@
+/* 2. Nur Icon und Label ausgrauen/durchstreichen */
+.score-list .row.bonus-disabled .label,
+.score-list .row.bonus-disabled .icon {
+    filter: grayscale(1);
+    text-decoration: line-through;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* 3. Den Wert (das OFF) knallig Rot machen */
+.score-list .row.bonus-disabled .value {
+    color: #ff4b4b; /* Kräftiges Rot */
+    font-weight: bold;
+    /*text-shadow: 0 0 8px rgba(255, 75, 75, 0.4);*/
+}
+
+/* Optional: Ein kleines Info-Icon beim Hover */
+.score-list .row.bonus-disabled:hover::after {
+    content: "Deaktiviert in den Auto-Settings";
+    position: absolute;
+    right: 0;
+    top: -10px;
+    background: var(--content-background-color);
+    color: gold;
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 8px;
+    border:1px solid goldenrod;
+    line-height: 1.2em;
+    z-index: 10;
+}

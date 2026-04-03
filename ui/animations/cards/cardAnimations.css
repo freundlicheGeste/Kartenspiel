@@ -1,0 +1,127 @@
+/* =========================================================
+   WASTE -> STOCK Animation
+========================================================= */
+/* Animaton vom Waste zurück auf den stock */
+.reset-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: var(--z-effects);
+    user-select: none;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+    animation: particle-flow 1s cubic-bezier(0.12, 0, 0.39, 0) forwards;
+    /* Opacity wird im JS gesetzt */
+}
+
+@keyframes particle-flow {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(0.6);
+        /* Start-Opacity kommt vom Inline-Style */
+    }
+    10% {
+        transform: translate(0, 0) scale(1);
+        /* Opacity bleibt, wie sie ist */
+    }
+    100% {
+        transform: translate(var(--dx), var(--dy)) rotate(var(--dr)) scale(0.3);
+        opacity: 0; /* Zum Ende hin ausblenden */
+    }
+}
+
+/* =========================================================
+   X -> FOUNDATION Animation
+========================================================= */
+.foundation-particle {
+    position: fixed; /* Absolut auf dem Bildschirm, ignoriert Container */
+    pointer-events: none;
+    z-index: 10000; /* Sehr hoch, über allen Karten und UI */
+    font-size: 1.8rem; /* Groß genug, um sichtbar zu sein */
+    user-select: none;
+    opacity: 0;
+    
+    /* Wir zentrieren den Ursprungspunkt des Partikels selbst */
+    transform-origin: center center;
+    transform: translate(-50%, -50%) rotate(0deg) scale(0); /* Start im Zentrum, winzig */
+
+    /* WEICHES TIMING & BEZIER (Perfektioniert) */
+    /* Langsamer (0.8s) und weicher (ease-out-back für kurzen 'Snap') */
+    animation: particle-burst 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes particle-burst {
+    0% {
+        /* WICHTIG:translate(-50%, -50%) muss erhalten bleiben, um zentriert zu starten */
+        transform: translate(-50%, -50%) rotate(0deg) scale(0);
+        opacity: 0;
+    }
+    15% {
+        opacity: 1; /* Schnelles Aufleuchten */
+        transform: translate(-50%, -50%) scale(1.1); /* Nicht so riesig (1.1 statt 1.3) */
+    }
+    80% {
+        opacity: 1; /* Länger sichtbar bleiben */
+    }
+    100% {
+        /* Distanz (DX, DY) und Drehung (DR) kommen aus dem JS */
+        /* translate(-50%, -50%) bleibt, um die radiale Berechnung zu wahren */
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--dr)) scale(0.6); /* Nicht so winzig enden (0.6 statt 0.2) */
+        opacity: 0; /* Zum Ende hin ausblenden */
+    }
+}
+
+/* =========================================================
+   FOUNDATION RAHMEN Animation
+========================================================= */
+
+/* Der Container für den Rahmen (wird der Karte hinzugefügt) 
+.card-glow-frame {
+    position: absolute;
+    /* Deckungsgleich mit der Karte 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 10; /* Über dem Karteninhalt 
+}
+
+.frame-particle {
+    position: absolute;
+    user-select: none;
+    line-height: 1;
+    /* Verhindert, dass die Symbole die Karte vergrößern 
+    white-space: nowrap;
+    /* Ein ganz dezenter Schein macht es edler 
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.3));
+}*/
+
+/* Container für den Rahmen */
+.card-glow-frame {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 10;
+    overflow: visible; /* Wichtig, damit Partikel am Rand nicht abgeschnitten werden */
+}
+
+.frame-particle {
+    position: absolute;
+    user-select: none;
+    white-space: nowrap;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+    transition: opacity 0.5s ease-in; /* Sanftes Einblenden beim Erstellen */
+}
+
+/* Animation: Sanftes Atmen */
+@keyframes frame-pulse {
+    0%, 100% { opacity: var(--base-op); transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: calc(var(--base-op) * 0.5); transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* Animation: Ganz langsames Kreisen/Wackeln */
+@keyframes frame-rotate {
+    0% { margin-left: 0; margin-top: 0; }
+    25% { margin-left: 2px; margin-top: -2px; }
+    50% { margin-left: 0; margin-top: 2px; }
+    75% { margin-left: -2px; margin-top: 0; }
+    100% { margin-left: 0; margin-top: 0; }
+}

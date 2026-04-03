@@ -1,0 +1,24 @@
+@keyframes floatUpFade {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px) scale(0.5); 
+    }
+    15% { /* Schnell einblenden */
+        opacity: 1; 
+        transform: translate(-50%, -20px) scale(1.1); 
+    }
+    60% { /* Hier ist die Aufwärtsbewegung eigentlich fertig (bei ca. 1.5s) */
+        opacity: 1;
+        transform: translate(-50%, -60px) scale(1.1);
+    }
+    100% { /* Die restliche Zeit wird nur noch sanft ausgeblendet */
+        opacity: 0; 
+        transform: translate(-50%, -80px) scale(1.2); 
+    }
+}
+
+@keyframes shakeEffect {
+    0%, 100% { transform: translate(-50%, -50%); }
+    25% { transform: translate(-55%, -50%); }
+    75% { transform: translate(-45%, -50%); }
+}

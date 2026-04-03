@@ -1,0 +1,47 @@
+/* Container für die einzelnen Abschnitte */
+.section-container {
+    border-radius: 6px;
+    border-collapse: separate; /* Beibehalten aus deinem Inline-Stil */
+    margin-bottom: 8px;
+}
+
+/* Spezielle Modifikatoren für die Container */
+.section-container.with-padding {
+    padding: 8px;
+}
+
+.section-container.compact-padding {
+    padding: 15px;
+}
+
+/* Text-Elemente */
+.hint-text-small {
+    margin: 0;
+    font-size: 0.85em; /* Optional: Anpassung der Größe */
+}
+
+.disclaimer-text {
+    font-size: 0.75em;
+    opacity: 0.6;
+    padding: 5px 8px;
+    font-style: italic;
+}
+
+/* Regel-Liste */
+.rules-list {
+    margin: 0;
+    padding-left: 18px;
+    color: #eee;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+/* Farbakzent für Regeln */
+.text-red {
+    color: #ff4d4d;
+}
+
+/* Zentrierter Wrapper (falls benötigt) */
+.ui-center {
+    text-align: center;
+}

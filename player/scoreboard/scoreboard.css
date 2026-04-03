@@ -1,0 +1,532 @@
+:root {
+    --accent-color: #ffd700;
+    --accent-color-dark: #b8860b;
+
+    --background-color: rgba(42, 59, 38, 0.98);
+    --text-color: white;
+}
+
+/* ==========================================================================
+   SCOREBOARD OVERLAY - HAUPTCONTAINER
+   ========================================================================== */
+
+#scoreboard-overlay {
+    background: var(--background-color); 
+    backdrop-filter: blur(8px);
+    border: 4px solid var(--accent-color);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    bottom: -100%;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+    display: flex;
+    height: 99vh;
+    justify-content: center;
+    
+    /* Zentrierung für 90% Breite */
+    left: 7%; 
+    width: 86%;
+    min-width: 585px;
+    /* Animation */
+    transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#scoreboard-overlay.open {
+    bottom: 0;
+}
+
+.scoreboard-content {
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    text-align: center;
+    width: 950px;
+}
+
+/* ==========================================================================
+   HEADER: KARTEN-TITEL (SCOREBOARD)
+   ========================================================================== */
+.card-word-title {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    perspective: 1000px;
+}
+
+.letter-card {
+    width: 45px;
+    align-items: center;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
+    border: 3px solid var(--text-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    color: black;
+    display: flex;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.8em;
+    font-weight: 900;
+    height: 65px;
+    justify-content: center;
+    /* Animation */
+    transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Fächer-Effekt */
+.letter-card:nth-child(odd) { transform: rotate(-5deg) translateY(5px); }
+.letter-card:nth-child(even) { transform: rotate(5deg) translateY(-5px); }
+
+.letter-card:hover {
+    box-shadow: none;
+    transform: translateY(-15px) scale(1.1) rotate(0deg) !important;
+}
+
+/* ==========================================================================
+   SORTIER-TABS
+   ========================================================================== */
+.sort-tabs {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.sort-tab {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    border-radius: 6px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    min-width: 110px;
+    padding: 10px 18px;
+    /* Animation */
+    transition: all 0.2s ease;
+}
+
+.sort-tab:hover,
+.pin-control:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--text-color);
+    box-shadow: none;
+    color: var(--accent-color);
+}
+
+.sort-tab.active {
+    background: linear-gradient(-178deg, var(--accent-color), var(--accent-color-dark));
+    border-color: var(--accent-color-dark);
+    box-shadow: 4px 4px 6px rgba(0,0,0,0.5);
+    color: var(--background-color);
+}
+
+/* ==========================================================================
+   TABELLE & SCROLL-BEREICH
+   ========================================================================== */
+.scoreboard-table-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    /* Scrollbar verstecken */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-x: hidden;
+}
+
+.scoreboard-table-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+#main-scoreboard {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* WICHTIG: Fixiert die Spaltenbreiten */
+}
+
+/* Fixe Spaltendefinitionen */
+.col-name    { width: 25%; text-align: left; }
+.col-champ   { width: 20%; }
+.col-score   { width: 15%; }
+.col-moves   { width: 12%; }
+.col-time    { width: 13%; }
+.col-action  { width: 15%; }
+
+#main-scoreboard th {
+    color: #ffd700;
+    border-bottom: 2px solid #ffd700;
+    padding: 15px 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+#main-scoreboard td {
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   TYPOGRAFIE & BADGES
+   ========================================================================== */
+.player-name {
+    font-size: 1.05em;
+    color: white;
+}
+
+.highlight-val {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.15em;
+    text-shadow: 0 0 5px rgba(255,215,0,0.3);
+}
+
+.small-avg {
+    font-size: 0.75em;
+    opacity: 0.6;
+    display: block;
+    margin-top: 4px;
+}
+
+.title-badge {
+    font-size: 0.7em;
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   INTERAKTIVE ELEMENTE (BUTTONS)
+   ========================================================================== */
+.replay-btn {
+    background: transparent;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85em;
+    transition: all 0.2s;
+    width: 100%;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: fit-content;
+    padding: 8px 5px; /* Etwas weniger Padding seitlich für schmale Screens */
+}
+
+.replay-btn:hover {
+    background: #ffd7009c;
+    color: #1e291c;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Rechtes Element im Header, der Schließen-Button */
+#scoreboard-overlay .close-btn {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    font-size: 2.2em;
+    right: 10px;
+    /* Animation: */
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+#scoreboard-overlay .close-btn:hover {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px var(--accent-color));
+    transform: translateX(2px) translateY(3px) scale(1.2) rotate(90deg);
+}
+
+/* ==========================================================================
+   ANIMATIONEN
+   ========================================================================== */
+
+/* Animation für die gepinnte Zeile */
+@keyframes pinned-gold-slide {
+    0% { transform: translateY(90px); opacity: 0; filter: brightness(3); }
+    100% { transform: translateY(0); opacity: 1; filter: brightness(1); }
+}
+
+.current-deck-row {
+    animation: pinned-gold-slide 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    background: rgba(255, 215, 0, 0.15) !important;
+}
+
+/* Ein subtiler Glanz-Effekt, der einmal über die Zeile läuft */
+.current-deck-row::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shine-row 15s infinite;
+}
+
+@keyframes shine-row {
+    0% { left: -100%; }
+    20% { left: 150%; }
+    100% { left: 150%; }
+}
+
+   /*
+#scoreboard-overlay.open .letter-card {
+    animation: cardEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* Gestaffeltes Erscheinen der Buchstaben *//*
+.letter-card:nth-child(1) { animation-delay: 0.05s; }
+.letter-card:nth-child(2) { animation-delay: 0.10s; }
+.letter-card:nth-child(3) { animation-delay: 0.15s; }
+.letter-card:nth-child(4) { animation-delay: 0.20s; }
+.letter-card:nth-child(5) { animation-delay: 0.25s; }
+.letter-card:nth-child(6) { animation-delay: 0.30s; }
+.letter-card:nth-child(7) { animation-delay: 0.35s; }
+.letter-card:nth-child(8) { animation-delay: 0.40s; }
+.letter-card:nth-child(9) { animation-delay: 0.45s; }
+.letter-card:nth-child(10) { animation-delay: 0.50s; }
+
+@keyframes cardEntrance {
+    0% { opacity: 0; transform: translateY(30px) rotateX(-90deg); }
+    100% { opacity: 1; transform: translateY(0) rotateX(0); }
+}*/
+
+/* Markierung für das aktuelle Deck */
+.current-deck-row {
+    background: rgba(255, 215, 0, 0.1) !important; /* Goldener Schimmer */
+    position: relative;
+}
+
+.current-deck-row td {
+    border-bottom: 1px solid rgba(255, 215, 0, 0.4) !important;
+}
+
+.badge-wrapper {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Kleiner Badge für das aktuelle Deck */
+.current-badge {
+    display: inline-block;
+    background: var(--accent-color);
+    color: #1a2419;
+    font-size: 0.6em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 5px;
+}
+
+/* 3. Schicker Toggle Switch */
+.pin-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 15px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(255, 215, 0, 0.3);
+    /* für button ohne label "📍 Pin" */
+    border-radius: 5px;
+    border: 1px solid rgb(144, 132, 15);
+    background: #21301e;
+    padding-right: 7px;
+}
+
+.pin-label {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 18px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--accent-color);
+    transition: .4s;
+    border-radius: 18px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px; width: 12px;
+    left: 2px; bottom: 2px;
+    background-color: var(--accent-color);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider { background-color: var(--accent-color-dark); }
+input:checked + .slider:before { 
+    transform: translateX(16px); 
+    background-color: white;
+}
+
+/* ==========================================================================
+   HIGHSCORE LÖSCHEN
+   ========================================================================== */
+
+.delete-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 65, 54, 0.5);
+    color: #ff4136; /* Rot-Ton */
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover {
+    background: #ff41369e;
+    color: white;
+    border-color: #ff4136;
+    box-shadow: 0 0 10px rgba(255, 65, 54, 0.3);
+}
+
+/* Container für die Buttons in der Aktion-Spalte */
+.action-cell-layout {
+    display: flex;
+    gap: 5px;
+}
+
+.delete-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Container für die Buttons */
+.action-cell-layout {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Button-Styling mit Icons */
+.replay-btn, .delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 32px;
+    padding: 0 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.8em;
+    transition: all 0.3s ease;
+}
+
+/* Replay-Button (Gold) */
+.replay-btn {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    width: 50px;
+}
+.replay-btn:hover {
+    background: #ffd7009c;
+    color: #1a2419;
+    font-weight: 1.2em,
+}
+
+/* Delete-Button (Rot & Sicherheits-Sperre) */
+.delete-btn {
+    background: rgba(255, 65, 54, 0.1);
+    border: 1px solid rgba(255, 65, 54, 0.4);
+    color: #ff4136;
+    opacity: 0; /* Standardmäßig unsichtbar */
+    pointer-events: none; /* Nicht klickbar solange unsichtbar */
+    transform: translateX(10px);
+}
+
+/* Diese Klasse wird per JS nach 2 Sek. ans Overlay vergeben */
+#scoreboard-overlay.safety-unlocked .delete-btn {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.btn-icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+.edit-icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    cursor: pointer;
+}
+
+
+
+/* New Record Badge */
+.record-badge {
+    animation: pulse-glow 1s infinite alternate;
+    background: #ff4136;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7em;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.btn-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor; /* WICHTIG: Nimmt die Textfarbe an */
+    vertical-align: middle;
+    margin-right: 4px;
+    pointer-events: none; /* Verhindert Klick-Probleme */
+}
+
+/* Spezielles Styling für die Tabs, damit Text und Icon nebeneinander stehen */
+.sort-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Der Pin im Label braucht keinen Abstand nach rechts */
+.pin-label .btn-icon {
+    margin-right: 0;
+    width: 14px;
+    opacity: 0.8;
+}

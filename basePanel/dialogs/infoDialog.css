@@ -1,0 +1,14 @@
+.info-title {
+    color: var(--accent-color);
+    font-size: 1.8em;
+    font-weight: bold;
+    line-height: 1.4em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.info-message {
+    color: var(--content-text-color);
+    font-size: 1.1em;
+    text-align: center;
+}

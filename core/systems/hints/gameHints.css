@@ -1,0 +1,132 @@
+/* ==========================================================================
+   TIPP Icon Button
+   ========================================================================== */
+
+#hint-cooldown-container {
+    position: relative;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    overflow: hidden; /* Wichtig für den Fill-Effekt */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#hint-bulb {
+    font-size: 22px;
+    filter: grayscale(1) opacity(0.3);
+    transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   TIPP Icon Animation
+   ========================================================================== */
+
+/* Der Fortschrittsbalken als Kreis um die Birne */
+#hint-progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--accent-color);
+    opacity: 0;
+}
+
+/* Animation für den Ladevorgang */
+.is-charging #hint-progress-ring {
+    opacity: 1;
+    animation: spin linear forwards;
+}
+
+.is-ready #hint-bulb {
+    filter: grayscale(0) drop-shadow(0 0 5px var(--accent-color));
+    transform: scale(1.2);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Der gelbe Hintergrund, der nach oben steigt */
+#hint-cooldown-container::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%; /* Startet bei 0 */
+    background: linear-gradient(to top, rgba(255, 203, 0, 0.4), rgba(255, 203, 0, 0.1));
+}
+
+/* Animation: Füllen */
+.is-charging::before {
+    animation: fillUp linear forwards;
+    animation-duration: var(--fill-duration, 5s);
+}
+
+/* Zustand: Tipp bereit */
+.is-ready #hint-bulb {
+    filter: grayscale(0) opacity(1) drop-shadow(0 0 8px var(--accent-color));
+    transform: scale(1.2);
+}
+
+.is-ready::before {
+    height: 100% !important;
+    background: rgba(255, 203, 0, 0.3);
+}
+
+@keyframes fillUp {
+    from { height: 0%; }
+    to { height: 100%; }
+}
+
+/* Nur wenn .can-hover vorhanden ist, reagiert der Container */
+#hint-cooldown-container.can-hover:hover {
+    background: #8b7812;
+    cursor: pointer;
+    border: 1px solid #ffbf00;
+}
+
+/* Wenn der Container gehovert wird, verändert sich die Bulb mit */
+#hint-cooldown-container.can-hover:hover #hint-bulb {
+    filter: grayscale(0) opacity(1) drop-shadow(0 0 8px var(--accent-color));
+    transform: scale(1.2);
+}
+
+/* ==========================================================================
+   TIPP Karte + Stapel Animation
+   ========================================================================== */
+
+/* DIE KARTE: Starkes Pulsieren und "Schwebe-Effekt" */
+@keyframes source-glow {
+    0% { box-shadow: 0 0 10px var(--accent-color); transform: scale(1); }
+    50% { box-shadow: 0 0 30px var(--accent-color); transform: scale(1.05); }
+    100% { box-shadow: 0 0 10px var(--accent-color); transform: scale(1); }
+}
+
+.hint-source-highlight {
+    animation: source-glow 1s ease-in-out infinite;
+    border: 3px solid #fff !important; /* Weißer Rand für harten Kontrast */
+    cursor: pointer;
+}
+
+/* DER STAPEL: Dezenter, gestrichelter Rand ohne Bewegung 
+.hint-target-highlight {
+    border: 4px dashed var(--accent-color) !important;
+    box-shadow: inset 0 0 15px var(--accent-color);
+    opacity: 0.8;
+}*/
+
+.hint-target-highlight {
+    outline: 3px dashed var(--accent-color);
+    /* outline-offset: -2px;  optional, Abstand zur Box */
+    box-shadow: 0 0 15px var(--accent-color); /* optionaler Glow */
+    border-radius: 6px;
+}

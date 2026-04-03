@@ -1,0 +1,65 @@
+.info-ticker {
+    bottom: 75px; /* soll sich an coin-stats und time-console orientieren*/
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 36, 25, 0.95);
+    border: 1px solid var(--accent-color);
+    padding: 10px 24px;
+    border-radius: 50px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(255, 215, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    min-height: 38px;
+
+    width: max-content;    /* Nimmt exakt die Breite des Textes ein */
+    max-width: 615px;      /* Deine gewünschte Obergrenze */
+    min-width: 250px;      /* Deine Untergrenze */
+    white-space: nowrap;   /* Verhindert das Umbrechen in die zweite Zeile */
+    overflow: hidden;      /* Falls der Text doch mal länger als 615px ist */
+    text-overflow: ellipsis; /* Fügt ... hinzu, falls max-width erreicht wird */
+}
+
+.info-ticker.ticker-hidden {
+    opacity: 0;
+    /* Kombiniert dein bestehendes translateX mit einem leichten Absenken */
+    transform: translateX(-50%) translateY(20px) scale(0.95);
+    pointer-events: none; 
+}
+
+/* Die Animation für den Text */
+/* Zustand: Unsichtbar und leicht nach unten verschoben */
+.fade-out {
+    opacity: 0;
+    transform: translateY(15px); 
+}
+
+/* Zustand: Sichtbar und an Originalposition */
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#ticker-text {
+    /* Bestehende Animationen beibehalten */
+    display: inline-block;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    
+    /* Rahmen und Outlines radikal entfernen */
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    
+    /* Verhindert lila Markierung beim Tap/Klick auf Mobilgeräten */
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Text-Eigenschaften */
+    background: transparent !important;
+}
+
+/* Ticker Art Farben */
+.ticker-text-replay { border-color: #00e5ff; color: #00e5ff; }
+.ticker-text-highscore { border-color: #ff00ea; box-shadow: 0 0 15px #ff00ea; }

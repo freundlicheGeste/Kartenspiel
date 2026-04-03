@@ -1,0 +1,33 @@
+/.DS_Store
+/.vscode
+unsortiert/info/Statistiken.txt
+unsortiert/info/Fehler zu beheben.txt
+unsortiert/info/Features implementieren.txt
+unsortiert/info/Abkürzungen SSOT DRY.txt
+unsortiert/dialogs/dialogManager.js
+unsortiert/dialogs/dialog.css
+unsortiert/code/appBase/cheating.js
+unsortiert/code/appBase/localStorage.js
+unsortiert/Claude/state/GameStateManager.js
+unsortiert/Claude/state/gameRunning.js
+unsortiert/Claude/state/gameReset.js
+unsortiert/Claude/state/gameQuit.js
+unsortiert/Claude/state/gamePause.js
+unsortiert/Claude/state/gameOver.js
+unsortiert/Claude/state/gameInit.js
+unsortiert/Claude/deck/deckManager.js
+unsortiert/Claude/deck/deckGenerator.js
+unsortiert/Claude/cards/dealCards.js
+unsortiert/Claude/cards/cardMovement.js
+unsortiert/Claude/cards/cardCreation.js
+unsortiert/test.js
+unsortiert/test.html
+unsortiert/test.css
+unsortiert/statusBannerTestCode.js
+ui/icons/buttons/sortTime.svg
+styles/gameDesign/solitaireLogo.afdesign
+styles/gameDesign/piles.afdesign
+styles/pik.svg
+styles/kreuz.svg
+styles/karo.svg
+styles/herz.svg

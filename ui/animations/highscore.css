@@ -1,0 +1,33 @@
+/* =========================================================
+   ANIMATION (Game Highscore - Minikarten)
+========================================================= */
+
+.falling-card {
+    top: -60px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    pointer-events: none;
+    animation: cardFall linear forwards;
+}
+
+.card-mini-top {
+    font-size: 10px;
+    align-self: flex-start;
+    margin-left: 2px;
+}
+
+.card-mini-center {
+    font-size: 20px;
+}
+
+@keyframes cardFall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(720deg); }
+}

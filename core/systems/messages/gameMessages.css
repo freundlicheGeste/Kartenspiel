@@ -1,0 +1,36 @@
+.game-message {
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 2.5em;
+    left: 50%;
+    pointer-events: none;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    top: 80%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    /* Animation dauert insgesamt 2.5s, passend zum JS timer */
+    animation: floatUpFade 2.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+.game-message.penalty {
+    color: #ff4444;
+}
+
+@keyframes floatUpFade {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, 20px) scale(0.5); 
+    }
+    15% { /* Schnell einblenden */
+        opacity: 1; 
+        transform: translate(-50%, -20px) scale(1.1); 
+    }
+    60% { /* Hier ist die Aufwärtsbewegung eigentlich fertig (bei ca. 1.5s) */
+        opacity: 1;
+        transform: translate(-50%, -60px) scale(1.1);
+    }
+    100% { /* Die restliche Zeit wird nur noch sanft ausgeblendet */
+        opacity: 0; 
+        transform: translate(-50%, -80px) scale(1.2); 
+    }
+}

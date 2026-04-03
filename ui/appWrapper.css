@@ -1,0 +1,62 @@
+:root {
+    --website-background: #2e7d32;
+    --app-width: 720px;
+    
+    /* Berechnung: App-Breite minus zb. 10px (5px links + 5px rechts) */
+    /*--width-game-board: calc(var(--app-width) - 10px);*/
+
+    --card-height: 130px;
+    --card-width: 90px;
+    --min-height-columns: 374px; /* Kartenstapel Höhe (ohne Ass) */
+
+    --status-bar-height: 63px;
+}
+
+/* 1. Globaler Reset (WICHTIG!) */
+* {
+    box-sizing: border-box; /* Browser Standard: content-box */
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Body als reiner Hintergrund/Zentrierer */
+body {
+    background-color: var(--website-background);
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    user-select: none;
+
+    /* Flexbox nur noch zum Zentrieren des Wrappers im Fenster */
+    display: flex;
+    align-items: center;     /* Vertikal mittig */
+    justify-content: center; /* Horizontal mittig */
+    min-height: 100dvh;      /* Wichtig, damit 'align-items' greift */
+}
+/* Sperrt den body (kein Scrollen möglich) */
+body.lock-scroll {
+    overflow: hidden;
+}
+
+/* 3. App-Container (Die "Leinwand") */
+#app-wrapper {
+    /* Begrenzung für große Monitore */
+    max-width: var(--app-width); 
+    
+    /* Flexibilität für Smartphones */
+    width: 100%;
+
+    min-height: 99dvh;
+    height: 100%;
+
+    /* Sorgt dafür, dass absolut positionierte Overlays 
+       sich an diesem Container ausrichten, nicht am Browserfenster */
+    position: relative;
+    /* overflow: hidden; muss deaktiviert sein für die "Karten austeilen" Animation */
+    
+    display: flex;
+    flex-direction: column;
+    
+    /* Jetzt kannst du hier sicher eine Border ziehen */
+    border: 2px solid red;
+    flex-direction: column;
+}

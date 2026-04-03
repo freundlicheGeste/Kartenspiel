@@ -1,0 +1,161 @@
+DEBUG: roter Rahmen Wrapper, dauerhafte info-ticker Anzeige
+-----------------------------------------------------------
+ERLEDIGT:
+Rundenzeitberechnung SSOT vorher Brutto und Nettozeit
+mit und ohne Pause vermischt, jetzt finalDuration
+
+finalDuration in gameReset hinzugefügt, dass es vor der
+nächsten Runde wieder gelöscht wird
+
+winStreak Berechnung gefixt, Bonuspunkte erst ab Runde 2
+
+replayGame gefixt durch updateGameBanner() löschen in
+initGameFlow
+
+handleGameOverAction() gefixt switch case 'restart' hat
+gefehlt
+
+SSOT Fix für die Kombo Punkte, wurden doppelt gewertet und
+auch dazu gezählt, wenn die Auto-Hilfen an waren.
+
+Fix für die Kombo Punkte. Reset Punkte bei nächster oder
+neuer Runde
+
+Fix für winStreak, der in executeWinSequence() zuerst
+berechnet und dann addiert wurde.
+
+FIX devLog Timestamp entfernt
+
+FIX newGame schaltet gleiche UI Elemente sichtbar wie
+initGame, welche auch in newGame aufgerufen wird
+
+FIX Buttons für Tipp, Shuffle und Undo nur im GameState
+RUNNING erlauben (war in GESTARTET)
+
+FIX Hint System Foundation wird jetzt wieder bevorzugt
+
+CHANGE ticker-info an Hint System gekoppelt und ausblenden
+lassen wenn gerade kein Tipp angezeigt wird
+
+FIX Game OVER
+Beim Klick auf Ignorieren lief der Timer nicht weiter
+GAME STATUS GameOver blieb aktiv. Hat zu früh ausgelöst.
+Beides gefixt.
+
+CHANGE Input Dialog (Scoreboard - Deckname ändern) code
+und css getrennt.
+
+FIX Im Win banner auf nächstes Spiel, bleibt die bulb
+noch auf is ready und der alles lösen button ist noch
+sichtbar, geht dann wenn RUNNING ist weg. In gameReset.js
+eingebaut.
+
+FIX Changelog Panel, Info Dialog, InfoPanel
+mit Enter-Taste "Zurück Button" und mit ESC-Taste: "closePanel"
+css statt inline style, event listener entfernen bei close
+btn-confirm
+
+FIX Karten austeilen Animation
+Stock Karten von oben links hängen beim austeilen, statt
+setTimeout direkt über css gelöst
+
+FIX Deckwahl in Settings von Hardcoded auf Zufall mischt
+im Hintergrund Karten neu, aber weiterhin letztes Hardcoded
+Deck nicht Zufallsdeck. Deaktiviert und erst beim Klick auf
+Speichern laden, falls sich deckart geändert hat
+
+FIX NaN Gesamt Punkte nach zweiter Runde aber streak 0, da "Nächstes
+Spiel" genutzt wurde. Alle Hilfen aus. Baispunkte, Combo, Combo
+Bonus Zeit. Purist und Speed Bonus waren Werte statt Objekte.
+
+FIX Level-Up Punktebewertung 1000 muss geändert werden
+da jetzt jede Runde wesentlich mehr Punkte gibt. evtl.
+10.000er Schritte oder doch komplexer. globale const erstellt
+
+TODO Scoreboard Buttons svg Images statt emoji, data-title
+für rechte buttons. AZ Name ohne title badge
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+ADD Kartenrücken wieder in Settings hinzufügen
+
+-----------------------------------------------------------
+
+ÜBERLEGUNG
+wenn alle 4 Asse in unter 50 Sekunden auf der Foundation
+liegen -> Bunuspunkte
+
+-----------------------------------------------------------
+
+ADD Spiel in unter x Zügen machen = Bonuspunkte
+
+-----------------------------------------------------------
+
+ADD UI Element für undoCount = 0; stockResetCount = 0;
+isFirstHintOfGame
+
+-----------------------------------------------------------
+
+CHANGE Stock Hand-Symbol
+wechselt immer von pointer zu Pfeil und zurück
+soll permanent pointer sein, solange cursor auf dem stapel ist
+
+-----------------------------------------------------------
+
+
+
+
+
+
+ÜBERLEGUNG
+bei der Münzen Animation, immer so viele Münzen, wie Punkte
+fliegen lassen oder weiter zufällig
+
+-----------------------------------------------------------
+
+CHANGE Wenn currentDeckObjects != null den restartButton
+im GameState IDLE aktiv lassen statt zu deaktivieren
+
+-----------------------------------------------------------
+
+MERKE Hardcoded #4 konnte nicht abgeschlossen werden 2x
+erst mit autohint und auch dabei musste 2x der rechte statt
+der vorgeschlagene Stapel aufgedeckt werden. Deck als
+schwierig markieren
+
+-----------------------------------------------------------
+
+TEST ist Hardcoded #7, #9 lösbar, wenn ja zu schwierig 
+hinzufügen, wie h#4
+
+-----------------------------------------------------------
+
+devLog in hint system und scoring überarbeiten, wegen fix
+eingefügt. genauso wie OLD functions Kommentare zu neuen
+functions hinzufügen und dann löschen oder in Testdatei
+verschieben
+
+-----------------------------------------------------------
+
+CHANGE Tab-Reload oder Spiel-Abbruch erkannt. Win-Streak
+zurückgesetzt. Kommt auch bei Deck das nicht beendet werden
+kann, wenn man im Panel "Neues Spiel" anklickt
+
+-----------------------------------------------------------
+
+ADD wenn ein Hardcoded Deck bereits als Generated Deck
+existiert (wenn man neue zur hardcodedListe hinzufügt)
+dann umbenennen in Hardcoded statt Generated
+
+-----------------------------------------------------------

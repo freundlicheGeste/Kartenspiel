@@ -1,0 +1,476 @@
+/* =========================================================
+   STOCK, WASTE & FOUNDATION
+========================================================= */
+
+#game-stacks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 100%;
+    align-items: stretch;
+}
+
+#deck-area,
+#foundation-area {
+    display: flex;
+    gap: 14px;
+}
+
+.slot {
+    /*border: 2px solid white;*/
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    height: var(--card-height);
+    position: relative;
+    width: var(--card-width);
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   TABLEAU COLUMNS
+========================================================= */
+
+/* Der Container (game-board) muss relativ sein, damit die Nachricht (gameMessages) darin schwebt */
+#game-board {
+    display: grid;
+    gap: 14px; /* bei 800px App-Breite 25px */
+    grid-template-columns: repeat(7, var(--card-width));
+    position: relative;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* =========================================================
+   STOCK / FOUNDATION
+========================================================= */
+
+/* Stock-Pile Hover & Klick Effekt */
+#stock-pile {
+    position: relative;
+}
+
+/* Die fliegende Karte während des Ziehens */
+.drawing-card-anim {
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.foundation {
+    align-items: center;
+    border: 2px dashed rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.1);
+    display: flex;
+    font-size: 2em;
+    justify-content: center;
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.1);
+}
+
+/*#waste-pile .card,*/
+.foundation .card {
+    left: -2px !important;
+    top: -2px !important;
+    /*transform: none !important;
+    transition: none !important;*/
+}
+
+#stock-pile, 
+#waste-pile {
+    position: relative;
+    /* Verhindert, dass Karten über den Rand ragen */
+    overflow: visible; 
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.1)
+}
+
+#stock-pile.empty {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+#stock-pile.empty::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Ein schickes, modernes Reload-Icon als Inline-SVG */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 4v6h-6'/%3E%3Cpath d='M20.49 15a9 9 0 1 1-2.12-9.36L23 10'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 40px;
+    opacity: 0.5;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+/* Der "Coolness"-Faktor beim Drüberfahren */
+#stock-pile.empty:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#stock-pile.empty:hover::after {
+    opacity: 1;
+    transform: scale(1.1) rotate(-45deg); /* Leichte Drehung nach links für den "Schwung" */
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+/* Kleiner Effekt beim Klicken */
+#stock-pile.empty:active::after {
+    transform: scale(0.9) rotate(-180deg);
+    transition: transform 0.2s ease;
+}
+
+/* Das Icon für den Stock Pile */
+#stock-pile::before {
+    content: "";
+    top: 32px;
+    left: 11px;
+    width: 64px;
+    height: 64px;
+    background-image: url('icons/stockPile.svg'); /* Pfad prüfen! (muss relativ zu dieser Datei sein) */
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.2;
+}
+
+/* Das Icon für den Waste Pile */
+#waste-pile::before {
+    content: "";
+    top: 39px;
+    left: 14px;
+    width: 60px;
+    height: 60px;
+    background-image: url('icons/wastePile.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.2;
+}
+
+#stock-pile .card, 
+#waste-pile .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0 !important; /* Wichtig: Kein Standard-Margin 
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;*/
+}
+
+/* Die oberste Karte im Stock-Stapel */
+#stock-pile .card:last-child {
+    cursor: pointer;
+}
+
+
+.column {
+    min-height: var(--min-height-columns);
+    box-sizing: border-box;
+}
+
+/* Kleiner Shuffle-Effekt (Wackeln) */
+@keyframes shuffle-wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg) translateX(2px); }
+    75% { transform: rotate(-2deg) translateX(-2px); }
+    100% { transform: rotate(0deg); }
+}
+
+.shuffle-anim {
+    animation: shuffle-wiggle 0.1s infinite;
+}
+
+/* =========================================================
+   GAME STATES
+========================================================= */
+
+.game-paused {
+    /*filter: blur(4px);
+    opacity: 0.3 !important;*/
+    pointer-events: none;
+    transition: filter 0.3s, opacity 0.3s;
+}
+
+.victory-card {
+    pointer-events: none;
+    transform: none !important;
+    transition: none !important;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+/*
+
+@keyframes flip-vfx {
+    0% {
+        transform: rotateY(0deg) scale(1);
+    }
+    50% {
+        transform: rotateY(90deg) scale(1.1);
+    }
+    100% {
+        transform: rotateY(180deg) scale(1);
+    }
+}
+
+/* Verhindert das Spiegeln des Karteninhalts nach der Drehung 
+.card:not(.back) {
+    backface-visibility: hidden;
+}*/
+
+.flip-animate {
+    animation: flip-vfx 0.4s ease-out;
+}
+
+@keyframes flip-vfx {
+
+    0% {
+        filter: brightness(1);
+        transform: scale(1) rotateY(180deg);
+    }
+
+    50% {
+        filter: brightness(1.5);
+        transform: scale(1.1) rotateY(90deg);
+    }
+
+    100% {
+        filter: brightness(1);
+        transform: scale(1) rotateY(0deg);
+    }
+}
+
+
+.auto-foundation-animate {
+    animation: glow-vfx 0.5s ease-in-out;
+}
+
+@keyframes glow-vfx {
+
+    0% {
+        box-shadow: 0 0 0px gold;
+    }
+
+    50% {
+        box-shadow: 0 0 20px gold;
+    }
+
+    100% {
+        box-shadow: 0 0 0px gold;
+    }
+}
+
+/* für shuffle button */
+.coin-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 14px;
+    height: 14px;
+    margin-left: 4px;
+    fill: var(--accent-color); /* Nutzt dein Gold */
+    filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.4));
+}
+
+/* CODE NUR TEMPORÄR */
+/* Punkteanzeige Coin */
+.coin-display-bottom {
+    bottom: 15px;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    /* justify-content sorgt dafür, dass Inhalt mittig bleibt */
+    justify-content: flex-start; 
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 14px;
+    border-radius: 50px;
+    border: 1px solid var(--accent-color-dark);
+    color: var(--accent-color);
+    
+    font-family: 'Courier New', monospace;
+    font-size: 1.6em;
+    font-weight: bold;
+
+    /* FIX: Feste Breite für 3 Ziffern + Coin */
+    /* 35px (Coin) + 12px (Gap) + ca. 60px (3 Ziffern) + Padding */
+    width: 134px; 
+    height: 50px; /* Fixe Höhe hilft bei der Zentrierung */
+    box-sizing: border-box;
+}
+
+#coin-display {
+    /* Sorgt dafür, dass die Zahlen innerhalb ihres Bereichs bleiben */
+    flex-grow: 1;
+    text-align: center;
+    line-height: 1; /* Verhindert vertikales Verschieben durch Font-Metriken */
+}
+
+.main-coin-svg {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0; /* Verhindert, dass die Münze gequetscht wird */
+    /*filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));*/
+    /* Wichtig für die vertikale Mitte im Flex-Container */
+    display: block; 
+}
+
+.coin-particle {
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+    /* Wir nutzen eine GPU-beschleunigte Basis-Einstellung */
+    will-change: transform, opacity;
+}
+
+/* Animation für GEWINN */
+@keyframes coin-fly-up {
+    0% { 
+        transform: translate(0, 0) rotate(0deg) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        /* Die Münze fliegt hoch UND zur Seite */
+        transform: translate(var(--x-diff), -120px) rotate(var(--rot)) scale(0.5); 
+        opacity: 0; 
+    }
+}
+
+/* Animation für VERLUST */
+@keyframes coin-fly-down {
+    0% { 
+        transform: translate(0, 0) rotate(0deg) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(var(--x-diff), 120px) rotate(var(--rot)) scale(0.5); 
+        opacity: 0; 
+    }
+}
+
+/* Klassen für die Text-Farbe beim Update */
+.score-gain { color: #00ff41 !important; transition: color 0.2s; }
+.score-loss { color: #ff4d4d !important; transition: color 0.2s; }
+
+.streak-display {
+    left: 165px; /* Positioniert ihn rechts neben den Coin-Container */
+    width: 120px; /* Etwas breiter für beide Werte */
+    justify-content: space-around;
+    padding: 8px 11px;
+    gap: 6px;
+}
+
+.streak-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 45px;
+}
+
+.streak-label {
+    font-size: 0.5em;
+    color: var(--accent-color-dark);
+    letter-spacing: 1px;
+    margin-bottom: -4px;
+}
+
+.streak-value {
+    font-size: 1.1em; /* Etwas kleiner als der Score, damit es passt */
+}
+
+.streak-divider {
+    width: 1px;
+    height: 25px;
+    background: var(--accent-color-dark);
+    opacity: 0.5;
+}
+
+/* Animation für die Werterhöhung */
+.value-bounce {
+    animation: bounce-text 0.3s ease;
+}
+
+@keyframes bounce-text {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); color: var(--bonus-color); }
+}
+
+.streak-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 45px;
+}
+
+/* Der Container für die rollende Zahl */
+.streak-value-wrapper {
+    position: relative;
+    height: 1.2em; /* Höhe einer Ziffer */
+    overflow: hidden;
+    line-height: 1.2em;
+    width: 100%;
+    text-align: center;
+}
+
+.streak-value {
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* Klasse für die Roll-Animation */
+.roll-up {
+    animation: roll-up-anim 0.4s forwards;
+}
+
+@keyframes roll-up-anim {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.old-value-exit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation: roll-out-anim 0.4s forwards;
+}
+
+@keyframes roll-out-anim {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100%); opacity: 0; }
+}
+
+.card.undefined {
+    outline: 3px solid red !important;
+}
+
+
+
+
+
+
+
+
+
+@keyframes dustExplosion {
+  0% {
+    transform: translate(var(--start-x), var(--start-y)) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--end-x), var(--end-y)) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.particle {
+    position: absolute;
+    font-size: 32px; /* doppelt so groß wie vorher */
+    pointer-events: none;
+    z-index: 1000; /* über Karte */
+    opacity: 0;
+    animation: dustExplosion 0.8s forwards ease-out;
+    user-select: none;
+}

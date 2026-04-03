@@ -1,0 +1,89 @@
+/*@keyframes cardFlyInSimple {
+    from {
+        opacity: 0;
+        transform: translate(-100px, -200px) rotate(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.dealing-animation {
+    animation: cardFlyIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    pointer-events: none; /* Während des Flugs nicht anklickbar 
+}
+
+@keyframes cardFlyIn {
+    from {
+        opacity: 0;
+        transform: translate(var(--tx, 0), -300px) rotate(var(--rot, 0));
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+@keyframes stockFlyIn {
+    from {
+        opacity: 0;
+        transform: translate(200px, -400px) rotate(20deg);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.stock-dealing-animation {
+    animation: stockFlyIn 0.3s ease-out backwards;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+}
+*/
+
+.dealing-animation {
+    animation: cardFlyIn 0.45s cubic-bezier(0.25, 1, 0.5, 1) backwards;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+@keyframes cardFlyIn {
+    0% {
+        opacity: 0;
+        transform: translate(var(--tx, 0), -300px) rotate(var(--rot, 0));
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+.stock-dealing-animation {
+    animation: stockFlyIn 0.35s ease-out backwards;
+    top: 0;
+    left: 0;
+}
+
+@keyframes stockFlyIn {
+    from {
+        opacity: 0;
+        /*transform: translate(150px, -200px) rotate(15deg);*/
+        transform: translate(-200px, -200px) rotate(-15deg);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0) rotate(0deg);
+    }
+}
+
+/* Dynamischer Winkel basierend auf der Spalte */
+#col-0 .dealing-animation { --rot: -15deg; --tx: -200px; }
+#col-1 .dealing-animation { --rot: -10deg; --tx: -150px; }
+#col-2 .dealing-animation { --rot: -5deg;  --tx: -100px; }
+#col-3 .dealing-animation { --rot: 0deg;   --tx: 0px;    }
+#col-4 .dealing-animation { --rot: 5deg;   --tx: 100px;  }
+#col-5 .dealing-animation { --rot: 10deg;  --tx: 150px;  }
+#col-6 .dealing-animation { --rot: 15deg;  --tx: 200px;  }

@@ -1,0 +1,154 @@
+/* Spezifisches Styling für das Input-Feld im Dialog */
+.base-panel .custom-input-field {
+    border: none;
+    background: var(--content-background-color);
+    color: var(--accent-color); /* Eingegebener Text in Gold */
+    font-family: 'Segoe UI', monospace;
+    font-size: 1.1em;
+    padding: 12px 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Placeholder-Farbe etwas dezenter */
+.base-panel .custom-input-field::placeholder {
+    color: rgba(255, 215, 0, 0.3);
+    font-style: italic;
+}
+
+/* Fokus-Effekt (Goldener Glow) */
+.base-panel .ui-container:has(.custom-input-field:focus) {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    background: var(--content-hover-color);
+}
+
+@keyframes shake-red {
+    0%, 100% { transform: translateX(0); border-color: var(--group-border-color); }
+    20%, 60% { transform: translateX(-6px); border-color: var(--penalty-color); }
+    40%, 80% { transform: translateX(6px); border-color: var(--penalty-color); }
+}
+
+.shake-error {
+    animation: shake-red 0.4s ease-in-out;
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+}
+
+.dialog-header-label {
+    margin-bottom: 12px; 
+    font-size: 0.85em; 
+    color: var(--accent-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.input-hint {
+    margin-top: 8px;
+    font-size: 0.7em;
+    color: #666;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+/* Falls dein showCustomInfo die Farben 'red' und 'green' nutzt */
+.highlight-red { color: var(--penalty-color); }
+.highlight-green { color: var(--bonus-color); }
+
+/* Das umschließende Container-Design */
+#input-container {
+    margin: 15px 0;
+    border: 1px solid var(--group-border-color);
+    background: var(--content-background-color);
+    border-radius: var(--group-border-radius);
+    overflow: hidden;
+}
+
+/* Das eigentliche Eingabefeld */
+.custom-input-field {
+    width: 100%;
+    background: transparent !important; /* Hintergrund vom Container nutzen */
+    border: none !important;
+    color: var(--accent-color); /* Text in Gold schreiben */
+    font-family: monospace;
+    font-size: 1.1em;
+    padding: 12px;
+    outline: none;
+    text-align: center;
+}
+
+/* Ein dezenter Hover-Effekt */
+#input-container:hover {
+    background: var(--content-hover-color);
+    border-color: var(--accent-color);
+}
+
+/* Container-Layout */
+.dialog-container {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Titel-Styling */
+.dialog-title {
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+/* Wrapper um das Input-Feld */
+.dialog-input-wrapper {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-color-dark);
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Fokus-Effekt für den Wrapper (modernes CSS) */
+.dialog-input-wrapper:focus-within {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Das eigentliche Eingabefeld */
+.dialog-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: monospace;
+    font-size: 1.2em;
+    padding: 10px;
+    text-align: center;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.dialog-input {
+    caret-color: var(--accent-color); /* Der blinkende Strich wird Gold */
+}
+
+.dialog-input::selection {
+    background: #e88010; /* Deine Gold/Gelbe Farbe */
+}
+
+/* Hinweis-Text unter dem Input */
+.dialog-hint {
+    font-size: 0.7em;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+/* Shake-Animation bei Fehlern */
+@keyframes shake-red {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); border-color: var(--penalty-color); }
+    40%, 80% { transform: translateX(5px); border-color: var(--penalty-color); }
+}
+
+.shake-error {
+    animation: shake-red 0.3s ease-in-out;
+}

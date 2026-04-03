@@ -1,0 +1,26 @@
+.level-up-card {
+    left: -200px;
+    top: 50%;
+    width: 150px;
+    height: 220px;
+    background: linear-gradient(135deg, #ffd700, #b8860b);
+    border: 5px solid white;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: bold;
+    pointer-events: none;
+    transform: translateY(-50%) rotate(-10deg);
+    animation: cardFlyAcross 3.5s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+@keyframes cardFlyAcross {
+    0% { left: -200px; transform: translateY(-50%) rotate(-20deg); }
+    30% { left: 50%; transform: translate(-50%, -50%) rotate(0deg) scale(1.2); }
+    70% { left: 50%; transform: translate(-50%, -50%) rotate(0deg) scale(1.2); opacity: 1; }
+    100% { left: 120%; transform: translateY(-50%) rotate(20deg); opacity: 0; }
+}

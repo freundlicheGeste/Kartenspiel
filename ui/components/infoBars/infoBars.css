@@ -1,0 +1,293 @@
+:root {
+    --accent-color: #ffd700;
+    --accent-color-dark: #b8860b;
+
+    --background-color: rgba(42, 59, 38);
+    --text-color: white;
+}
+
+/* ==========================================================================
+   INFO BARS - CONTAINER
+   ========================================================================== */
+
+/* Der äußere Wrapper zentriert alles auf dem Bildschirm */
+.info-bar {
+    top: var(--status-bar-height);
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* Klicks gehen durch den leeren Raum durch */
+}
+
+/* Dieser Container entspricht der Breite deines Spielbretts */
+.info-bar-area {
+    position: relative;
+    width: 100%;
+    max-width: var(--app-width); /* HIER: Breite deines Spielfelds eintragen! */
+    pointer-events: none;
+}
+
+/* Deine Bars müssen nun innerhalb der info-area positioniert werden */
+.info-bar-base, .best-stats-bar {
+    position: absolute;
+}
+
+/* Ausrichtung an den Ecken des 900px Containers */
+.bar-left { 
+    left: 14px; /* Klebt nun am linken Rand des Spielfelds, nicht am Browser */
+}
+
+.bar-right { 
+    right: 14px; /* Klebt am rechten Rand des Spielfelds */
+    pointer-events: auto; /* Klicks auf die Bars wieder erlauben */
+}
+
+.best-stats-bar {
+    left: 50%;
+    transform: translateX(-50%); /* Exakt in der Mitte */
+}
+
+/* ==========================================================================
+   INFO BARS (links-rechts)
+   ========================================================================== */
+
+/* Gemeinsame Basis für beide Bars (links, rechts) */
+.info-bar-base {
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #f1c40f;
+    border-top: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 15px 4px 15px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transition: transform 0.4s ease-out, opacity 0.3s ease-out, top 0.4s ease-out;
+    cursor: pointer;
+    white-space: nowrap;
+
+    width: 160px; /* Feste Breite der Bars */
+    overflow: hidden; /* Versteckt Text, der übersteht */
+
+    opacity: 1;
+    display: flex;
+}
+
+.info-bar-base.hidden {
+    display: flex !important;
+    opacity: 0;
+    top: 30px;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in, top 0.2s ease-in;
+}
+
+/* Spezifische Farben */
+.color-deck { color: #3498db; }
+.color-player { color: #2ecc71; }
+.color-level { color: #ff5bff; }
+.color-level-up { color: #ff00ff !important; border-color: #ff00ff !important; text-align: center;}
+
+/* Der Rahmen des Balkens bei Level-Up */
+.progress-container.color-level-up {
+    border: 1px solid #ff00ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+/* Die Füllung des Balkens bei Level-Up */
+.progress-fill.color-level-up {
+    background: #ff00ff !important;
+}
+
+#bar-left-text {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#bar-right {
+    display: flex;
+    justify-content: center; /* Horizontale Zentrierung */
+    align-items: center;     /* Vertikale Zentrierung */
+    text-align: center;
+}
+
+/* Wichtig: Der Progress-Wrapper muss selbst keine feste Breite haben, 
+   die die Zentrierung stört */
+#progress-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Progress Bar Styling innerhalb der rechten Bar */
+.progress-container {
+    width: 120px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 203, 0, 0.4);
+    border-radius: 6px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    transform: translateY(-1px); /* Schiebt den Balken 1px hoch */
+   /* margin: 0 auto;  Zusätzliche Sicherheit für die Zentrierung */
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(135deg, var(--accent-color, #f1c40f), var(--accent-color-dark, #d35400));
+    transition: width 0.5s ease;
+}
+
+/* Magenta Flash Animation */
+@keyframes flash-magenta {
+    0% { background-color: rgba(0,0,0,0.8); }
+    50% { background-color: rgba(255, 0, 255, 0.4); }
+    100% { background-color: rgba(0,0,0,0.8); }
+}
+.flash { animation: flash-magenta 0.5s linear 3; }
+
+
+/* Ticker-Logik */
+.ticker-container {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+.ticker-text {
+    display: inline-block;
+    padding-left: 100%; /* Startet außerhalb */
+    animation: ticker 10s linear infinite;
+}
+
+@keyframes ticker {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
+
+/* Falls der Text kurz genug ist: Animation stoppen */
+.no-ticker {
+    animation: none !important;
+    padding-left: 0 !important;
+    text-align: center;
+    width: 100%;
+}
+
+@keyframes shockwave {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.7);
+        transform: scale(1);
+    }
+    70% {
+        box-shadow: 0 0 0 40px rgba(255, 0, 255, 0);
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 255, 0);
+        transform: scale(1);
+    }
+}
+
+.level-up-shock {
+    animation: shockwave 0.6s ease-out;
+}
+
+/* ==========================================================================
+   INFO BARS (Highsocre Stats Bar)(mitte)
+   ========================================================================== */
+
+.best-stats-bar {
+    top: -3px; /* leicht hinter der statusbar für die slide in animation */
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 2px solid #f1c40f;
+    border-top: none;
+    color: #fff;
+    font-weight: bold;
+    gap: 40px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 9px 10px 4px 10px;
+    width: fit-content;
+
+    display: flex;
+    opacity: 1;
+    /*
+    ohne Bounce-Effekt (padding-top 6px, top: 73px)
+    transition: transform 0.4s ease-out, opacity 0.3s ease-out, top 0.4s ease-out;
+    */
+
+    /* mit Bounce Effekt (dafür padding-top +3px & top: 70 statt 73) */
+    transition: 
+        opacity 0.3s ease-out, 
+        top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Der Bounce-Effekt */
+}
+
+/* Der "Eingefahrene" Zustand */
+.best-stats-bar.hidden {
+    display: flex !important; /* Überschreibt dein altes display: none */
+    opacity: 0;
+    top: -30px; /* Schiebt es hoch hinter die Stats-Bar */
+    pointer-events: none; /* Verhindert Klicks im versteckten Zustand */
+    transition: opacity 0.2s ease-in, top 0.2s ease-in;
+}
+
+/* Die Labels (Züge, Punkte, Zeit) sind in deinem Mockup farblich abgesetzt */
+.best-stats-bar span {
+    display: inline-block;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* Optional: Verschiedene Farben für die Werte (wie im Mockup) */
+#best-moves-val { color: #2ecc71; } /* Grün */
+#best-score-val { color: #f1c40f; } /* Gelb */
+#best-time-val  { color: #3498db; } /* Blau */
+
+/* ==========================================================================
+   INFO BARS (Highsocre Stats Bar)(mitte) (Animation bei neuem Highscore)
+   ========================================================================== */
+
+/* Die Animations-Klasse */
+.stats-update-pulse {
+    animation: pulse-glow 0.8s ease-out;
+}
+
+@keyframes pulse-glow {
+    0% {
+        color: #fff;
+        text-shadow: 0 0 0px #ffd700;
+        transform: scale(1);
+    }
+    30% {
+        color: #ffd700; /* Gold-Ton */
+        text-shadow: 0 0 15px #ffd700;
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 0px #ffd700;
+    }
+}
+
+/* Hilfsklasse für das Highscore-Label selbst */
+.new-highscore-label {
+    background: linear-gradient(45deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   INFO BARS (Stats Bar)(links) (Replay Anzeige)
+   ========================================================================== */
+
+/* Replay-Modus Spezial-Look */
+.color-replay {
+    color: #00e5ff !important;
+    /*text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+    font-weight: bold;*/
+}

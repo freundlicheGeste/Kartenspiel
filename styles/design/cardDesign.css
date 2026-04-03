@@ -1,0 +1,115 @@
+/* --- RÜCKSEITEN --- */
+.card.back.design-standard,
+#stock-pile.design-standard {
+  background: repeating-linear-gradient(45deg, #1565c0, #1565c0 10px, #1e88e5 10px, #1e88e5 20px);
+}
+
+.card.back.design-red,
+#stock-pile.design-red {
+  background: repeating-linear-gradient(45deg, #c0392b, #c0392b 10px, #a93226 10px, #a93226 20px);
+}
+
+.card.back.design-green,
+#stock-pile.design-green {
+  background: repeating-linear-gradient(45deg, #2e7d32, #2e7d32 10px, #43a047 10px, #43a047 20px);
+}
+
+.card.back.design-purple,
+#stock-pile.design-purple {
+  background: repeating-linear-gradient(45deg, #6a1b9a, #6a1b9a 10px, #8e24aa 10px, #8e24aa 20px);
+}
+
+.card.back.design-orange,
+#stock-pile.design-orange {
+  background: repeating-linear-gradient(45deg, #ef6c00, #ef6c00 10px, #ffa726 10px, #ffa726 20px);
+}
+
+.card.back.design-teal,
+#stock-pile.design-teal {
+  background: repeating-linear-gradient(45deg, #00897b, #00897b 10px, #26a69a 10px, #26a69a 20px);
+}
+
+.card.back.design-pink,
+#stock-pile.design-pink {
+  background: repeating-linear-gradient(45deg, #d81b60, #d81b60 10px, #ec407a 10px, #ec407a 20px);
+}
+
+.card.back.design-yellow,
+#stock-pile.design-yellow {
+  background: repeating-linear-gradient(45deg, #fbc02d, #fbc02d 10px, #ffee58 10px, #ffee58 20px);
+}
+
+.card.back.design-brown,
+#stock-pile.design-brown {
+  background: repeating-linear-gradient(45deg, #5d4037, #5d4037 10px, #8d6e63 10px, #8d6e63 20px);
+}
+
+.card.back.design-cyan,
+#stock-pile.design-cyan {
+  background: repeating-linear-gradient(45deg, #00acc1, #00acc1 10px, #26c6da 10px, #26c6da 20px);
+}
+
+.card.back.design-indigo,
+#stock-pile.design-indigo {
+  background: repeating-linear-gradient(45deg, #283593, #283593 10px, #3f51b5 10px, #3f51b5 20px);
+}
+
+.card.back.design-gray,
+#stock-pile.design-gray {
+  background: repeating-linear-gradient(45deg, #424242, #424242 10px, #757575 10px, #757575 20px);
+}
+
+
+/* Moderne Designs */
+
+.card.back.design-dot,
+#stock-pile.design-dot {
+  background: radial-gradient(#42a5f5 10%, #1565c0 11%) 0 0/17px 15px;
+}
+
+.card.back.design-stripes-fine,
+#stock-pile.design-stripes-fine {
+  background: repeating-linear-gradient(135deg, #7b1fa2, #7b1fa2 3px, #ba68c8 3px, #ba68c8 6px);
+}
+
+.card.back.design-hatch,
+#stock-pile.design-hatch {
+  background: repeating-linear-gradient(45deg, #009688, #009688 2px, transparent 2px, transparent 6px);
+}
+
+.card.back.design-grid,
+#stock-pile.design-grid {
+  background: linear-gradient(#cfd8dc 1px, transparent 1px),
+              linear-gradient(90deg, #cfd8dc 1px, orange 1px);
+  background-size: 10px 10px;
+}
+
+.card.back.design-wave,
+#stock-pile.design-wave {
+  background: repeating-linear-gradient(135deg, #ffca28, #ffca28 5px, #fff59d 5px, #fff59d 10px);
+}
+
+.card.back.design-chevron,
+#stock-pile.design-chevron {
+  background: repeating-linear-gradient(45deg, #d32f2f, #d32f2f 8px, #ff7961 8px, #ff7961 16px);
+}
+
+.card.back.design-circle,
+#stock-pile.design-circle {
+  background: radial-gradient(circle, black 12%, red 10%) 0 0/16px 15px;
+}
+
+.card.back.design-diagonal-lines,
+#stock-pile.design-diagonal-lines {
+  background: repeating-linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 2px, transparent 2px, transparent 8px),
+              #1e88e5;
+}
+
+.card.back.design-fade,
+#stock-pile.design-fade {
+  background: linear-gradient(135deg, #8e24aa 0%, #ce93d8 100%);
+}
+
+/* --- VORDERSEITEN (Styles für Symbole/Schrift) --- */
+.card.front-standard { font-family: 'Segoe UI', sans-serif; }
+.card.front-classic { font-family: 'serif'; }

@@ -1,0 +1,155 @@
+:root {
+    --accent-color: #ffd700;
+    --accent-color-dark: #b8860b;
+
+    --background-color: rgba(42, 59, 38);
+    --text-color: white;
+}
+
+#status-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Jedes Feld exakt 25% */
+    background: var(--background-color); /* darf keine Transparenz haben für die Highscore-Bar */
+    border: 2px solid var(--accent-color);
+    border-radius: 5px;
+    height: var(--status-bar-height);
+    padding: 0;
+    margin-bottom: 36px;
+    overflow: hidden;
+    gap: 0;
+
+    max-width: 100%;
+    width: 100%; /* Füllt den Wrapper exakt aus */
+    box-sizing: border-box; /* Rechnet die 2px Border in die 100% ein */
+}
+
+.stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0 10px;
+}
+
+/* Bei der XP Box, signalisieren, dass diese umgeschaltet werden kann */
+.stat-box:last-child {
+    cursor: pointer;
+}
+
+/* Die Trennlinie als Pseudoelement */
+.stat-box:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;           /* Exakt am rechten Rand der Box */
+    top: 20%;           /* Linie startet etwas weiter unten */
+    height: 60%;        /* Linie ist nicht raumfüllend (sieht edler aus) */
+    width: 1px;         /* Haardünne Linie */
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Obere Zeile (Labels) */
+.stat-label, #xp-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    padding-top: 6px;
+    position: relative;
+}
+
+/* Untere Zeile (Werte & Bar) */
+.stat-value, .level-value, .xp-bar-wrapper {
+    height: 1.2em; /* Einheitliche Höhe für alle Boxen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 1.6em; /* Große, klare Schrift */
+    font-weight: bold;
+}
+
+.xp-bar-wrapper {
+    width: 100%;
+}
+
+.xp-bar-container {
+    width: 80%;
+    height: 17px; /* Feste Höhe, damit es kein Strich bleibt */
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 203, 0, 0.4);
+    border-radius: 7px;
+    overflow: hidden;
+    margin-top: -3px;
+}
+
+#level-progress-bar {
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-color-dark));
+    transition: width 0.4s ease-in-out;
+}
+
+/* Animation beim Wechsel der Box-Ansicht (XP Box) */
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    animation: quickFade 0.25s ease-out;
+}
+
+@keyframes quickFade {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Farben der Werte */
+.move-value { color: #00ff41; }
+.score-value { color: var(--accent-color); }
+.timer-value { color: #00e5ff; }
+.level-value { color: #ff00e1; }
+
+/* L */
+.lvl-label {
+    font-size: 0.6em;
+    opacity: 0.7;
+    padding-top: 3px;
+    padding-right: 2px;
+}
+
+/* Die Magenta Zahl */
+.lvl-highlight {
+    color: magenta;
+    text-shadow: 0 0 5px rgba(255, 0, 255, 0.2);
+}
+
+/* Der Bindestrich - */
+.lvl-divider {
+    padding: 0 3px; /* 3px links und rechts vom Bindestrich */
+    opacity: 0.8;
+}
+
+/* Die XP Zahl */
+.lvl-xp-val {
+    padding-right: 2px;
+}
+
+/* Das Wort XP */
+.lvl-xp-unit {
+    font-size: 0.7em;
+    opacity: 0.7;
+    padding-top: 3px;
+}
+
+.level-up-flash {
+    animation: levelUpGlow 0.8s ease-out;
+}
+
+/* Animation für die Progressbar beim Level Up */
+@keyframes levelUpGlow {
+    0% { filter: brightness(1); box-shadow: none; }
+    50% { filter: brightness(1.5); box-shadow: 0 0 15px magenta; background: magenta; }
+    100% { filter: brightness(1); box-shadow: none; }
+}
