@@ -8,14 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <link rel="manifest" href="manifest.json">
-
     <title>Solitär - Klondike</title>
 
-    <!-- TAB ICON -->
-    <!-- <link rel="icon" href="data:;base64,iVBORw0KGgo="> leeres Icon -->
     <link rel="icon" type="image/svg+xml" href="ui/logo.svg">
-    <!-- TAB ICON -->
-
 
     <!-- CSS Wrapper & Z-Index -->
     <link rel="stylesheet" href="ui/appWrapper.css">
@@ -41,21 +36,16 @@
     <link rel="stylesheet" href="ui/components/infoBars/infoBars.css">
     <link rel="stylesheet" href="ui/components/infoTicker/info-ticker.css">
     <link rel="stylesheet" href="ui/components/statusBar/statusBar.css">
-
     <link rel="stylesheet" href="ui/screens/startScreen/startScreen.css">
 
     <!-- CSS DIALOGS -->
     <link rel="stylesheet" href="basePanel/dialogs/winDialog.css">
     <link rel="stylesheet" href="basePanel/dialogs/infoDialog.css">
-
     <link rel="stylesheet" href="basePanel/panels/changelogPanel.css">
     <link rel="stylesheet" href="basePanel/panels/infoPanel.css">
-
     <link rel="stylesheet" href="ui/replacements/title.css">
 
-
-
-    <!-- UNSORTIERT BZW BELASSEN, NOCH EINZUSORTIEREN: -->
+    <!-- UNSORTIERT -->
     <link rel="stylesheet" href="ui/style.css">
     <link rel="stylesheet" href="styles/animations/cardNoActionAnimation.css">
     <link rel="stylesheet" href="styles/animations/pulseEffect.css">
@@ -64,11 +54,9 @@
     <link rel="stylesheet" href="styles/xpSystem/boniMessages.css">
     <link rel="stylesheet" href="styles/xpSystem/levelUp.css">
     <link rel="stylesheet" href="styles/stapelIndex.css">
-
     <link rel="stylesheet" href="basePanel/basePanel.css">
     <link rel="stylesheet" href="basePanel/controls/panelControls.css">
     <link rel="stylesheet" href="basePanel/dialogs/inputDialog.css">
-    <!-- CSS -->
 </head>
 
 <body>
@@ -81,23 +69,19 @@
                 <div class="stat-label">ZÜGE</div>
                 <div class="stat-value move-value" id="moves-count">0</div>
             </div>
-
             <div class="stat-box">
                 <div class="stat-label">PUNKTE</div>
                 <div class="stat-value score-value" id="score-display">0</div>
             </div>
-
             <div class="stat-box">
                 <div class="stat-label">ZEIT</div>
                 <div class="stat-value timer-value" id="timer-display">00:00</div>
             </div>
-
             <div class="stat-box" onclick="toggleLevelDetails()">
                 <div id="level-summary" class="stat-content" style="display: none;">
                     <div class="stat-label">LEVEL</div>
                     <div class="level-value" id="level-number">0</div>
                 </div>
-
                 <div id="level-details" class="stat-content">
                     <div class="stat-label">XP</div>
                     <div class="level-value" id="xp-number">0</div>
@@ -110,16 +94,15 @@
         <div class="info-bar" id="info-bars">
             <div class="info-bar-area">
                 <div id="bar-left" class="info-bar-base bar-left hidden">
-                    <div class="ticker-container"> <span id="bar-left-text" class="ticker-text no-ticker"></span>
+                    <div class="ticker-container">
+                        <span id="bar-left-text" class="ticker-text no-ticker"></span>
                     </div>
                 </div>
-
                 <div id="deck-best-stats" class="best-stats-bar hidden">
                     <span id="best-moves-val">--</span>
                     <span id="best-score-val">--</span>
                     <span id="best-time-val">--:--</span>
                 </div>
-
                 <div id="bar-right" class="info-bar-base bar-right hidden" onclick="toggleRightBarContent()">
                     <div id="progress-wrapper">
                         <div class="progress-container">
@@ -145,15 +128,11 @@
         </div>
         <!-- START OVERLAY -->
 
-        <!-- GAME AREA -->
-
-        <!-- FOUNDATION & STOCK (+ Birne + Auto-Solve Button) -->
+        <!-- FOUNDATION & STOCK -->
         <header id="game-stacks">
             <div id="deck-area">
-                <div id="stock-pile" class="slot" onclick="revealNextStockCard()">
-                </div>
-                <div id="waste-pile" class="slot">
-                </div>
+                <div id="stock-pile" class="slot" onclick="revealNextStockCard()"></div>
+                <div id="waste-pile" class="slot"></div>
             </div>
 
             <div id="hint-action-wrapper">
@@ -161,7 +140,6 @@
                     <div id="hint-bulb">💡</div>
                     <div id="hint-progress-ring"></div>
                 </div>
-
                 <button id="auto-finish-btn" class="special-btn hidden" title="Auto-Vervollständigen"
                     onclick="handleAutoSolveClick()">
                     ✨ ALLES<br>SAMMELN
@@ -175,20 +153,16 @@
                 <div class="foundation slot" id="f-spades" data-suit="spades">♠</div>
             </div>
         </header>
-        <!-- FOUNDATION & STOCK -->
 
-        <!-- TABLEAU-KARTEN -->
+        <!-- TABLEAU -->
         <div id="game-board"></div>
-        <!-- TABLEAU-KARTEN -->
-        <!-- GAME AREA -->
 
         <!-- STATUS BANNER -->
         <div id="info-ticker" class="info-ticker ticker-hidden">
             <span id="ticker-text" class="fade-in">Lade Informationen...</span>
         </div>
-        <!-- STATUS BANNER -->
 
-
+        <!-- COIN DISPLAY -->
         <div id="coin-stats-container" class="coin-display-bottom">
             <div class="coin-wrapper">
                 <svg class="main-coin-svg" viewBox="0 0 500 500">
@@ -201,6 +175,7 @@
             <span id="coin-display">0</span>
         </div>
 
+        <!-- UNDO / REDO -->
         <div class="time-console">
             <button id="undo-btn" class="time-btn" title="Rückgängig (Strg+Z)" onclick="undoLastMove()">
                 <svg viewBox="0 0 24 24" class="time-icon">
@@ -209,7 +184,6 @@
                 </svg>
                 <span id="undo-count-badge" class="time-badge">0</span>
             </button>
-
             <button id="redo-btn" class="time-btn disabled" title="Wiederholen (Strg+Shift+Z)" onclick="redoLastMove()">
                 <svg viewBox="0 0 24 24" class="time-icon">
                     <path
@@ -220,15 +194,10 @@
         </div>
 
         <button id="btn-stop-demo" onclick="stopDemo()"
-            style="display: none; background: #f44336; color: white; padding: 10px;">
+            style="display:none; background:#f44336; color:white; padding:10px;">
             ⏹ Demo Stoppen
         </button>
     </div>
-
-
-
-
-
 
     <!-- BUTTON BAR -->
     <div id="controls" class="collapsed">
@@ -272,23 +241,19 @@
             <button id="button-shuffle" disabled onclick="shuffleRescue()" title="Verdeckte Karten neu mischen">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
-
                     <polyline points="16 3 21 3 21 8" />
                     <line x1="4" y1="20" x2="21" y2="3" />
                     <polyline points="21 16 21 21 16 21" />
                     <line x1="15" y1="15" x2="21" y2="21" />
                     <line x1="4" y1="4" x2="9" y2="9" />
-
                 </svg>
             </button>
             <button onclick="openPanel('gameInfo')" title="Informationen & Regeln">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
-
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 16v-4" />
                     <path d="M12 8h.01" />
-
                 </svg>
             </button>
             <button id="pause-btn" onclick="openPanel('settings')" title="Einstellungen">
@@ -319,7 +284,6 @@
                     <div class="letter-card">R</div>
                     <div class="letter-card">D</div>
                 </div>
-
                 <div class="sort-tabs">
                     <button id="sort-btn-name" class="sort-tab" onclick="updateScoreboardUI('name')"
                         data-title="Nach Namen sortieren">
@@ -331,7 +295,7 @@
                         data-title="Höchste Punktzahl">
                         <svg class="btn-icon" viewBox="0 0 24 24">
                             <path d="M5 16h3v5H5v-5zm11-8h3v13h-3V8zm-5.5 4h3v9h-3v-9zM21 2H3v2h18V2z" />
-                        </svg>Punkte
+                        </svg> Punkte
                     </button>
                     <button id="sort-btn-moves" class="sort-tab" onclick="updateScoreboardUI('moves')"
                         data-title="Wenigste Spielzüge">
@@ -347,26 +311,25 @@
                                 d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" />
                         </svg> Zeit
                     </button>
-
                     <div class="pin-control" data-title="Aktuelles Deck oben anheften">
                         <label class="switch">
                             <input type="checkbox" id="pin-deck-toggle" onchange="togglePinning(this.checked)">
                             <span class="slider"></span>
                         </label>
-                        <span class="pin-label"><svg class="btn-icon" viewBox="0 0 24 24">
+                        <span class="pin-label">
+                            <svg class="btn-icon" viewBox="0 0 24 24">
                                 <path
                                     d="M16 9V4l1 0V2H7v2l1 0v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z" />
-                            </svg></span>
+                            </svg>
+                        </span>
                     </div>
                 </div>
-
             </header>
-
             <div class="scoreboard-table-wrapper">
                 <table id="main-scoreboard">
                     <thead>
                         <tr>
-                            <th style="text-align: left;">Deck Info</th>
+                            <th style="text-align:left;">Deck Info</th>
                             <th>Titelträger</th>
                             <th>Punkte</th>
                             <th>Züge</th>
@@ -374,23 +337,19 @@
                             <th>Aktion</th>
                         </tr>
                     </thead>
-                    <tbody id="main-scoreboard-body">
-                    </tbody>
+                    <tbody id="main-scoreboard-body"></tbody>
                 </table>
             </div>
-
-            <footer id="statsFooter" style="margin-top: 15px; color: rgba(255,255,255,0.5);">
+            <footer id="statsFooter" style="margin-top:15px; color:rgba(255,255,255,0.5);">
                 <small><span id="globalStats"></span></small>
             </footer>
         </div>
     </div>
     <!-- SCORE BOARD -->
 
-    <!-- OVERLAY (zentriert das Panel) -->
+    <!-- BASE PANEL -->
     <div id="base-panel-id" class="base-panel">
-        <!-- PANEL -->
         <div class="base-panel-container">
-            <!-- HEADER -->
             <header class="base-panel-header">
                 <div class="header-title-wrapper">
                     <div class="header-card">i</div>
@@ -401,25 +360,16 @@
                 </div>
                 <button class="header-close-btn" onclick="closePanel('base-panel-id')">&times;</button>
             </header>
-            <!-- HEADER -->
-            <!-- CONTENT -->
-            <div class="base-panel-content">
-                <!-- CONTENT HERE -->
-            </div>
-            <!-- CONTENT -->
-            <!-- FOOTER -->
+            <div class="base-panel-content"></div>
             <footer class="base-panel-footer">
                 <button class="footer-btn">Zurück zum Spiel</button>
-            </footer management>
-            <!-- FOOTER -->
+            </footer>
         </div>
-        <!-- PANEL -->
     </div>
-    <!-- OVERLAY -->
+    <!-- BASE PANEL -->
 
-
-    <!-- ALT-LASTEN -->
-    <div id="rewards-panel" class="casino-modal" style="display: none;">
+    <!-- REWARDS (Legacy) -->
+    <div id="rewards-panel" class="casino-modal" style="display:none;">
         <div class="banner-content">
             <header class="modal-header">
                 <div class="scoreboard-header-main">
@@ -428,86 +378,97 @@
                 </div>
                 <button onclick="toggleRewards()" class="close-btn">&times;</button>
             </header>
-
-            <div class="rewards-scroll-area" id="rewards-list">
-            </div>
-
+            <div class="rewards-scroll-area" id="rewards-list"></div>
             <button class="replay-btn" onclick="toggleRewards()">SCHLIESSEN</button>
         </div>
     </div>
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-
-        <!-- BASIS (Kartenstapel) -->
+    <!-- SVG ICON SPRITES -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
         <symbol id="icon-base" viewBox="0 0 24 24">
             <rect x="5" y="6" width="10" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <rect x="9" y="4" width="10" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"
                 opacity="0.6" />
         </symbol>
-
-        <!-- SPEED (Timer + Karte) -->
         <symbol id="icon-speed" viewBox="0 0 24 24">
             <circle cx="12" cy="13" r="7" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M12 13l3-2M12 6v2" stroke="currentColor" stroke-width="2" fill="none" />
         </symbol>
-
-        <!-- PURIST (Karte ohne Hilfe / clean play) -->
         <symbol id="icon-purist" viewBox="0 0 24 24">
             <rect x="6" y="4" width="12" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M9 8h6M9 12h4" stroke="currentColor" stroke-width="2" />
         </symbol>
-
-        <!-- FLIP COMBO (2 Karten aufgedeckt) -->
         <symbol id="icon-flip" viewBox="0 0 24 24">
             <rect x="4" y="6" width="8" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <rect x="12" y="6" width="8" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M8 4v-2M16 4v-2" stroke="currentColor" stroke-width="2" />
         </symbol>
-
-        <!-- FOUNDATION (Karten werden "abgelegt") -->
         <symbol id="icon-foundation" viewBox="0 0 24 24">
             <rect x="4" y="10" width="6" height="10" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <rect x="10" y="7" width="6" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <rect x="16" y="4" width="6" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
         </symbol>
-
-        <!-- WIN STREAK (Karte + Stern) -->
         <symbol id="icon-streak" viewBox="0 0 24 24">
             <rect x="4" y="5" width="10" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M17 8l1 2 2 .2-1.5 1.3.5 2-2-1-2 1 .5-2L14 10.2l2-.2 1-2z" fill="currentColor" />
         </symbol>
-
-        <!-- TIME BONUS (Stoppuhr clean) -->
         <symbol id="icon-time" viewBox="0 0 24 24">
             <circle cx="12" cy="13" r="7" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M12 13l2 2M12 6v2M10 3h4" stroke="currentColor" stroke-width="2" />
         </symbol>
-
-        <!-- TOTAL (gewonnene Karte / Highlight) -->
         <symbol id="icon-total" viewBox="0 0 24 24">
             <rect x="5" y="4" width="14" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
             <path d="M12 8l1.5 3h3l-2.5 2 1 3-3-1.5L9 16l1-3-2.5-2h3z" fill="currentColor" />
         </symbol>
-
     </svg>
 
-    <!-- CLAUDE AI - Spielkartekn-Code -->
-    <!-- Basis (keine Abhängigkeiten) -->
+    <!-- ═══════════════════════════════════════════════════
+         SCRIPT LADEREIHENFOLGE
+         Regel: Jede Datei darf nur Funktionen aufrufen,
+         die in FRÜHER geladenen Dateien definiert sind.
+         app_storage.js MUSS ZULETZT stehen — sie ruft
+         initStorage() direkt auf, was alle anderen
+         Funktionen bereits voraussetzt.
+    ═══════════════════════════════════════════════════ -->
+
+    <!-- 0. Dev-Logging (muss ZUERST sein — IS_DEV_MODE wird überall gebraucht) -->
+    <script src="dev.logs.js"></script>
+
+    <!-- 1. UI-Stubs (sichere Fallbacks für externe UI-Funktionen) -->
+    <script src="ui_stubs.js"></script>
+
+    <!-- 2. Reine Utilities — keine Abhängigkeiten -->
     <script src="deck.utils.js"></script>
     <script src="card.utils.js"></script>
 
-    <!-- Karten-Schicht -->
+    <!-- 3. Sieg-Kalkulation & Session-Stats -->
+    <script src="victory.calculator.js"></script>
+
+    <!-- 4. Input-Tracking (lastMousePos für Undo-Animationen) -->
+    <script src="input.tracking.js"></script>
+
+    <!-- 5. Globale Spielvariablen & Kern-Logik -->
+    <script src="app.core.js"></script>
+
+    <!-- 6. Scoring-System (score-Variable, POINTS_CONFIG, getScoreValue) -->
+    <script src="scoring.system.js"></script>
+
+    <!-- 7. UI-Schicht Score (updateScore überschreibt die Basis aus scoring_system) -->
+    <script src="app.ui.js"></script>
+
+    <!-- 8. Karten-Schicht -->
+    <script src="touch.handler.js"></script>
     <script src="card.creation.js"></script>
     <script src="card.animate.js"></script>
     <script src="card.stock.js"></script>
     <script src="card.move.js"></script>
     <script src="card.deal.js"></script>
 
-    <!-- Deck-Schicht -->
+    <!-- 9. Deck-Schicht -->
     <script src="deck.generator.js"></script>
     <script src="deck.manager.js"></script>
 
-    <!-- Spiel-Status -->
+    <!-- 10. Spiel-Zustände & Ablauf -->
     <script src="game.state.js"></script>
     <script src="game.reset.js"></script>
     <script src="game.running.js"></script>
@@ -516,100 +477,68 @@
     <script src="game.quit.js"></script>
     <script src="game.init.js"></script>
 
+    <!-- 11. Messaging (braucht POINTS_CONFIG aus scoring_system) -->
+    <script src="game.messages.js"></script>
 
+    <!-- 12. Spielmechaniken -->
+    <script src="game.hints.js"></script>
+    <script src="game.undo.js"></script>
+    <script src="game.undo.penalty.js"></script>
+    <script src="game.shuffle.js"></script>
+    <script src="game.autosolve.js"></script>
+    <script src="game.registration.js"></script>
+    <script src="game.scoreboard.js"></script>
+    <script src="game.xp.js"></script>
 
+    <!-- 13. UI & Animationen -->
+    <script src="ui.animations.js"></script>
 
-    <!-- AUDIO -->
+    <!-- 14. Audio -->
     <script src="audio/GameAudioManager.js"></script>
     <script src="audio/gameSounds.js"></script>
 
-    <!-- CORE -->
+    <!-- 15. Daten -->
     <script src="core/data/hardcodedDecks.js"></script>
-    <script src="core/data/localStorage.js"></script>
-    <!--
-    <script src="core/state/gameInit.js"></script>
-    <script src="core/state/gameOver.js"></script>
-    <script src="core/state/gamePause.js"></script>
-    <script src="core/state/gameQuit.js"></script>
-    <script src="core/state/gameReset.js"></script>
-    <script src="core/state/gameRunning.js"></script>
-    <script src="core/state/GameStateManager.js"></script> -->
 
-    <script src="core/systems/autoSolve/autoSolve.js"></script>
-    <script src="core/systems/hints/gameHints.js"></script>
-    <script src="core/systems/history/gameUndoRedo.js"></script>
-    <script src="core/systems/messages/gameMessages.js"></script>
-    <script src="core/systems/gameRegistration.js"></script>
-    <script src="core/systems/scoringSystem.js"></script>
-    <script src="core/systems/shuffleSystem.js"></script>
-
-    <!-- ENGINE
-    <script src="engine/cards/cardCreation.js"></script>
-    <script src="engine/cards/cardMovement.js"></script>
-    <script src="engine/cards/dealCards.js"></script> 
-    <script src="engine/deck/deckGenerator.js"></script>
-    <script src="engine/deck/deckManager.js"></script> -->
+    <!-- 16. Keyboard -->
     <script src="engine/input/keyboardShortcuts.js"></script>
 
-    <!-- PLAYER -->
-    <script src="player/scoreboard/scoreboard.js"></script>
-    <script src="player/experienceLevel.js"></script>
-    <script src="player/levelTitles.js"></script>
-    <script src="player/rewards.js"></script>
-
-    <!-- UI -->
-    <script src="ui/animations/highscore.js"></script>
-    <script src="ui/animations/victory.js"></script>
-    <script src="ui/animations/cards/cardAnimations.js"></script>
-
+    <!-- 17. UI-Komponenten (überschreiben Stubs aus ui_stubs.js) -->
     <script src="ui/components/buttonBar/buttonBar.js"></script>
     <script src="ui/components/infoBars/infoBars.js"></script>
     <script src="ui/components/infoTicker/info-ticker.js"></script>
     <script src="ui/components/statusBar/statusBar.js"></script>
 
-    <!-- UI -->
+    <!-- 18. Developer Tools (IS_DEV_MODE schon geladen, weitere Dev-Tools) -->
     <script src="developer/debugFunctions.js"></script>
-    <script src="developer/devLogs.js"></script>
     <script src="developer/devMode.js"></script>
     <script src="developer/loggingSystem.js"></script>
     <script src="developer/recordGame.js"></script>
 
-
-
-    <!-- UNSORTIERT BZW BELASSEN, NOCH EINZUSORTIEREN: -->
-
-    <!-- APP BASE -->
-    <script src="unsortiert/code/appBase/cheating.js"></script>
+    <!-- 19. Unsortiert / Legacy -->
     <script src="unsortiert/code/appBase/localStorage.js"></script>
+    <script src="unsortiert/code/appBase/cheating.js"></script>
     <script src="unsortiert/code/toggleBanner.js"></script>
     <script src="unsortiert/dialogs/dialogManager.js"></script>
     <script src="unsortiert/dialogs/gameQuitDialog.js"></script>
 
-    <!-- PANEL & DIALOGS Base -->
+    <!-- 20. BasePanel & Dialogs (überschreiben Stubs aus ui_stubs.js) -->
     <script src="basePanel/basePanel.js"></script>
     <script src="basePanel/controls/panelControls.js"></script>
-    <!-- PANEL & DIALOGS Base -->
-
-    <!-- PANELS -->
     <script src="basePanel/panels/changelogPanel.js"></script>
     <script src="basePanel/panels/infoPanel.js"></script>
     <script src="basePanel/panels/settingsPanel.js"></script>
-    <!-- PANELS -->
-
-    <!-- DIALOGS -->
     <script src="basePanel/dialogs/gameInactiveDialog.js"></script>
     <script src="basePanel/dialogs/gameOverDialog.js"></script>
     <script src="basePanel/dialogs/gameQuitDialog.js"></script>
     <script src="basePanel/dialogs/gameRestartDialog.js"></script>
     <script src="basePanel/dialogs/winDialog.js"></script>
-    <!-- DIALOGS -->
-
-    <!-- DIALOGE (BASIS) -->
     <script src="basePanel/dialogs/confirmDialog.js"></script>
     <script src="basePanel/dialogs/infoDialog.js"></script>
     <script src="basePanel/dialogs/inputDialog.js"></script>
 
-    <script src="script.js"></script>
+    <!-- 21. App Storage — MUSS ZULETZT stehen, ruft initStorage() direkt auf -->
+    <script src="app.storage.js"></script>
 
 </body>
 

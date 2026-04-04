@@ -64,6 +64,8 @@ const hardcodedDecks = [
     ["D-8", "S-7", "C-10", "S-6", "S-2", "H-7", "S-A", "D-3", "D-10", "C-K", "S-J", "H-2", "C-A", "D-2", "D-Q", "C-Q", "H-3", "H-K", "H-5", "D-6", "H-4", "D-7", "H-10", "D-J", "S-5", "S-10", "C-9", "C-J", "H-J", "C-2", "H-6", "D-5", "H-8", "S-9", "S-Q", "S-8", "C-5", "H-A", "D-9", "C-8", "C-7", "H-9", "S-3", "H-Q", "D-4", "C-4", "S-4", "D-A", "C-3", "D-K", "C-6", "S-K"],
     ["S-9", "D-A", "C-4", "H-9", "C-K", "H-8", "C-6", "D-3", "C-9", "C-3", "H-A", "S-10", "D-9", "D-7", "C-8", "H-K", "H-Q", "S-Q", "S-5", "H-5", "H-6", "S-K", "C-5", "C-A", "S-A", "C-Q", "H-3", "C-7", "H-10", "S-7", "D-10", "S-2", "H-J", "D-2", "S-8", "C-2", "S-4", "S-3", "D-5", "D-J", "S-J", "C-10", "C-J", "D-6", "D-8", "H-4", "H-2", "H-7", "D-Q", "D-4", "S-6", "D-K"],
     ["S-5", "C-5", "D-3", "S-7", "C-9", "H-10", "S-J", "S-3", "H-Q", "C-A", "S-Q", "D-8", "H-9", "H-J", "C-8", "S-4", "D-4", "S-2", "D-7", "D-J", "H-5", "H-K", "C-6", "C-3", "H-A", "S-A", "H-2", "S-6", "H-3", "C-2", "D-A", "D-5", "C-J", "H-4", "S-9", "H-8", "C-4", "D-2", "D-K", "D-6", "D-9", "D-Q", "C-K", "C-Q", "H-6", "S-8", "S-10", "C-7", "C-10", "H-7", "D-10", "S-K"],
+    ["D-J", "H-4", "H-9", "H-8", "C-2", "S-10", "C-J", "S-6", "D-7", "D-A", "H-5", "S-K", "D-10", "H-Q", "D-9", "C-4", "D-6", "C-3", "H-10", "C-6", "S-J", "C-9", "C-10", "C-K", "C-8", "S-5", "C-A", "C-5", "S-3", "D-3", "D-K", "S-9", "H-6", "C-Q", "S-A", "S-Q", "H-7", "H-2", "D-4", "S-2", "D-8", "H-3", "H-J", "S-8", "D-Q", "D-2", "S-4", "H-A", "S-7", "D-5", "C-7", "H-K"],
+    ["C-6", "C-J", "S-3", "H-K", "H-J", "H-9", "C-8", "S-K", "H-Q", "D-5", "C-2", "D-2", "S-4", "H-6", "D-6", "C-5", "D-J", "H-4", "D-8", "C-A", "D-4", "S-5", "H-10", "S-7", "S-10", "C-9", "C-4", "C-K", "C-3", "S-9", "H-8", "S-2", "D-Q", "H-A", "C-Q", "H-2", "D-7", "S-6", "C-10", "D-9", "S-J", "C-7", "S-Q", "H-7", "D-10", "D-A", "D-3", "S-8", "H-5", "H-3", "S-A", "D-K"],
 
 ];
 
@@ -160,7 +162,7 @@ async function printCurrentDeckForCode() {
     const codeSnippet = `[${formatted.join(", ")}],`;
 
     try {
-        await navigator.clipboard.writeText(codeSnippet);
+        //await navigator.clipboard.writeText(codeSnippet);
         console.group("--- 🃏 NEW HARDCODED DECK SNIPPET ---");
         console.log("Der folgende Code wurde in die Zwischenablage kopiert:");
         console.log(codeSnippet);

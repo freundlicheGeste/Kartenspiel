@@ -28,16 +28,8 @@ let cardDistance = 22; // Abstand der Karten im Tableau-Column zueinander (verti
    SCORE / MOVES / TIME
 ===================================================== */
 
-let score = 0;
 let moves = 0;
 let finalDuration = 0;
-
-
-/* =====================================================
-   XP
-===================================================== */
-
-let sessionXP = 0; // Speichert die XP live für die Anzeige, addiert die tatsächlichen XP aber erst nachdem die Runde abgeschlossen wurde.
 
 /* =====================================================
    LOCAL STORAGE
@@ -126,8 +118,6 @@ function initStorage() {
     resetGame();
 
     document.body.classList.add('lock-scroll');
-
-    card.addEventListener('pointerdown', handlePointerDown);
 }
 
 // Lokalen Speicher direkt beim Laden der Datei initialisieren
@@ -151,62 +141,6 @@ function checkReloadPenalty() {
         // Sofort speichern, damit der "bestrafte" Zustand fixiert ist
         saveToDisk();
     }
-}
-
-function handlePointerDown(e) {
-    const card = e.currentTarget;
-    if (card.classList.contains('back')) return;
-
-    // Zeitmessung für Unterscheidung Klick vs. Drag
-    const startTime = Date.now();
-
-    const onPointerUp = (upEvent) => {
-        const duration = Date.now() - startTime;
-
-        // Wenn nur kurz getippt wurde (< 200ms) -> Behandle es als Klick (deine handleMoveLogic)
-        if (duration < 200) {
-            handleMoveLogic(e);
-        } else {
-            // Hier käme deine Drag-End-Logik hin
-        }
-
-        window.removeEventListener('pointerup', onPointerUp);
-    };
-
-    window.addEventListener('pointerup', onPointerUp);
-}
-
-const COIN_SVG_CODE = `
-    <svg viewBox="0 0 500 500">
-        <circle cx="250" cy="250" r="230" fill="#d4af37" stroke="#9a7b1a" stroke-width="20"/>
-        <circle cx="250" cy="250" r="180" fill="#f1c40f"/>
-        <path d="M250 120 L310 210 L410 210 L330 290 L360 390 L250 330 L140 390 L170 290 L90 210 L190 210 Z" fill="#d4af37"/>
-    </svg>`;
-
-function updateScoreOLD(points) {
-    if (points === 0) return;
-
-    score += points;
-    if (score < 0) score = 0;
-
-    // IDs der beiden Displays
-    const displays = ['score-display', 'coin-display'];
-    const colorClass = points > 0 ? 'score-gain' : 'score-loss';
-
-    displays.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.innerText = score;
-            // Farb-Effekt triggern
-            el.classList.add(colorClass);
-            setTimeout(() => el.classList.remove(colorClass), 600);
-        }
-    });
-
-    // Partikel-Effekt starten
-    spawnCoinParticles(points > 0);
-
-    if (typeof updateLevelUI === "function") updateLevelUI(points);
 }
 
 /**
@@ -431,112 +365,6 @@ function runAutoLogic() {
             }, 1000);
         }
     }
-}
-
-function executeWinSequenceNAN_FEHLER() {
-    // Bricht ab, wenn der Sieg schon ausgelöst wurde
-    if (victoryTriggered) return;
-    victoryTriggered = true;
-
-    // scoringSystem.js Zusammenfassung der Combos + Combo Punkte
-    showWinScreen();
-
-    // Falls der Timer noch läuft (manuelles Spiel), stoppen
-    if (gameTimerId) {
-        clearInterval(gameTimerId);
-        gameTimerId = null;
-    }
-
-    // Wenn finalDuration noch nicht durch AutoSolve gesetzt wurde (manuelles Ende)
-    if (finalDuration === 0) {
-        finalDuration = getElapsedSeconds();
-    }
-
-    // v0.9.9 FIX - LOG:
-    console.log(`%c 🕒 ZEIT-CHECK: Bonus-Berechnung mit ${finalDuration} Sekunden (${formatTime(finalDuration)}). Pausen wurden abgezogen.`, "color: #00ff00; font-weight: bold;");
-
-    gameState.set(GameStates.BEENDET);
-    // XP-System mit Basis-Punkten füttern (UI Werte übernehmen und speichern)
-    commitSessionXP();
-
-    // --- SSOT BONI BERECHNUNG ---
-    const speedBonus = VictoryCalculator.getSpeedBonus(finalDuration);
-
-    const puristBonus = VictoryCalculator.getPuristBonus({
-        autoFoundation: kts.cfg.autoFoundation,
-        autoFlip: kts.cfg.autoFlip,
-        autoHint: kts.cfg.autoHint
-    });
-
-    const timeBonus = VictoryCalculator.getTimeBonus(finalDuration);
-
-    // Kombi Bonus:
-    const flipBonus = sessionStats.flipComboPoints;
-    const foundationBonus = sessionStats.foundationComboPoints;
-
-    // WICHTIG: Da das Spiel gerade gewonnen wurde, ist der REALE Streak für 
-    // diese Abrechnung kts.game.winStreak + 1
-    const currentWinStreak = kts.game.winStreak + 1;
-
-    // Streak Bonus berechnen:
-    // Sieg 1: 0 Punkte
-    // Sieg 2: (2-1) * 50 = 50 Punkte
-    // Sieg 3: (3-1) * 50 = 100 Punkte
-    const streakBonus = currentWinStreak > 1 ? (currentWinStreak - 1) * 50 : 0;
-
-    // Basis-Punkte
-    const baseScore = score;
-    // Bonus-Punkte
-    const bonusTotal = speedBonus + puristBonus + timeBonus + flipBonus + foundationBonus + streakBonus;
-
-    // Gesamt-Punkte
-    score += bonusTotal;
-
-    // --- Statistik & Highscore Handling ---
-    // Bisherige Stats auslesen (bevor registerGameEnd sie überschreibt)
-    const lastStats = JSON.parse(JSON.stringify(getDeckStats(currentDeckObjects) || { bestScore: 0, lastPlayed: null }));
-    // Ruft die Statistik-Funktion aus deckManager.js auf und speichert die neuen Stats.
-    registerGameEnd(currentDeckObjects, score, moves, finalDuration, wasAutoSolved);
-    // Prüfen, ob es ein neuer Rekord erreicht wurde
-    const isNewRecord = score > lastStats.bestScore;
-
-    if (IS_DEV_MODE) {
-        console.log(`Score ${baseScore} + Speed ${speedBonus} + Purist ${puristBonus} + Zeit ${timeBonus} = ${score}`);
-    }
-
-    // UI & Animation (Gewinn-Animation starten)
-    isAnimating = true;
-    startVictoryCascade();
-
-    if (!kts.cfg.audio.mute && typeof playVictorySound === 'function') {
-        playVictorySound();
-    }
-
-    // Resultat für das Win-Panel
-    const gameResult = {
-        baseScore,
-        score,
-        moves,
-        time: finalDuration,
-        winStreak: currentWinStreak,
-        timeBonus,
-        speedBonus,
-        puristBonus,
-        lastPlayed: lastStats.lastPlayed,
-        bestScore: Math.max(lastStats.bestScore, score),
-        isNewRecord: isNewRecord,
-        // Combo-Stats aus sessionStats mitschicken!
-        flipComboCount: sessionStats.flipComboCount,
-        foundationComboCount: sessionStats.foundationComboCount,
-        flipBonus: sessionStats.flipComboPoints,
-        foundationBonus: sessionStats.foundationComboPoints,
-        streakBonus: streakBonus,
-        wasAutoSolved: wasAutoSolved
-    };
-
-    setTimeout(() => {
-        openPanel('win', gameResult);
-    }, 2000);
 }
 
 function validateMove(card, target) {
@@ -894,8 +722,6 @@ function debugFoundationParticles(slot, card, count = 20) {
     }
 }
 
-
-
 function startEffect() {
     const firstSlot = document.querySelector('.foundation'); // oder '#f-hearts' etc.
     const card = firstSlot.querySelector('.card'); // falls schon eine Karte drin ist
@@ -906,37 +732,6 @@ function startEffect() {
 
     }, 2000); // alle 2 Sekunden neu zeichnen
 }
-/*
-const tickerMessages = [
-    "Willkommen im System",
-    "Updates werden im Hintergrund geladen",
-    "Sicherheitsprotokolle aktiv",
-    "Verbindung stabil: 124ms Latenz"
-];
-
-let currentIndex = 0;
-const tickerElement = document.getElementById('ticker-text');
-
-function rotateTickerText() {
-    // 1. Text ausfaden
-    tickerElement.classList.replace('fade-in', 'fade-out');
-
-    // 2. Warten bis Ausfaden fertig (500ms), dann Text ändern
-    setTimeout(() => {
-        currentIndex = (currentIndex + 1) % tickerMessages.length;
-        tickerElement.textContent = tickerMessages[currentIndex];
-
-        // 3. Text wieder einfaden
-        tickerElement.classList.replace('fade-out', 'fade-in');
-    }, 500);
-}
-
-// Alle 4 Sekunden wechseln
-setInterval(rotateTickerText, 4000);
-
-// Initialen Text setzen
-tickerElement.textContent = tickerMessages[0];
-*/
 
 function executeWinSequence() {
     if (victoryTriggered) return;

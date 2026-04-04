@@ -55,36 +55,42 @@ function createCardElement(data, isBack = false, index = 0, isUndo = false) {
 function _attachCardEvents(card) {
     // Einfachklick: Karte umdrehen ODER bewegen (je nach Konfiguration)
     card.onclick = e => {
-        if (!canAct()) return;
+        // Tap-Handling übernimmt touch.handler.js via pointerdown/up
+        // onclick nur für Maus-Klicks ohne Drag
+        if (_touchMoved) return; // War ein Drag, kein Klick
+        if (gameState.is(GameStates.PAUSIERT)) return;
 
         if (card.classList.contains('back')) {
             // Nur die oberste Karte einer Spalte darf umgedreht werden
             if (card.parentElement.classList.contains('column') &&
                 card === card.parentElement.lastElementChild) {
-                flipCard(card);
+                queueAction(() => flipCard(card));
             }
             return;
         }
 
         if (!kts.cfg.smartDblClick) {
-            handleMoveLogic(e);
+            queueAction(() => handleMoveLogic(e));
         }
     };
 
     // Doppelklick: nur wenn smartDblClick aktiv
     if (kts.cfg.smartDblClick) {
-        card.ondblclick = handleMoveLogic;
+        card.ondblclick = e => queueAction(() => handleMoveLogic(e));
     }
 
-    // Drag & Drop
+    // Bestehende Maus-Drag-Events bleiben für Desktop
     card.draggable = true;
     card.ondragstart = e => {
-        if (!canAct()) {
+        if (gameState.is(GameStates.PAUSIERT)) {
             e.preventDefault();
             return;
         }
         e.dataTransfer.setData('text', card.dataset.cardId);
     };
+
+    // Touch-Events für Mobile/Tablet
+    attachTouchEvents(card);
 }
 
 /* =====================================================

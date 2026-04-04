@@ -4,6 +4,28 @@
    Darf von allen anderen card.*.js importiert/genutzt werden.
 ===================================================== */
 
+// Input-Queue für Klicks während Animationen
+const _inputQueue = [];
+let _queueProcessing = false;
+
+function queueAction(fn) {
+    if (!isAnimating) {
+        fn();
+        return;
+    }
+    // Maximal 1 Aktion queuen (letzte gewinnt)
+    _inputQueue.length = 0;
+    _inputQueue.push(fn);
+}
+
+function flushInputQueue() {
+    if (_inputQueue.length === 0 || _queueProcessing) return;
+    _queueProcessing = true;
+    const fn = _inputQueue.shift();
+    fn?.();
+    _queueProcessing = false;
+}
+
 /* ---- Guard ---------------------------------------- */
 
 /**
@@ -53,9 +75,9 @@ function applyCardFront(el, cardData) {
  */
 function cardElToData(el) {
     return {
-        value:  el.dataset.value,
-        color:  el.dataset.color,
-        suit:   el.dataset.suit,
+        value: el.dataset.value,
+        color: el.dataset.color,
+        suit: el.dataset.suit,
         symbol: el.dataset.symbol,
     };
 }
@@ -69,7 +91,7 @@ function cardElToData(el) {
  */
 function getCardStack(card) {
     const parent = card.parentElement;
-    const index  = Array.from(parent.children).indexOf(card);
+    const index = Array.from(parent.children).indexOf(card);
     return Array.from(parent.children).slice(index);
 }
 
@@ -79,12 +101,12 @@ function getCardStack(card) {
  * @param {HTMLElement} target - Ziel-Container (column | foundation)
  */
 function moveStackToTarget(card, target) {
-    const stack       = getCardStack(card);
-    let nextTopIndex  = target.children.length;
+    const stack = getCardStack(card);
+    let nextTopIndex = target.children.length;
 
     stack.forEach(c => {
         if (target.classList.contains('foundation')) {
-            c.style.top  = '0px';
+            c.style.top = '0px';
             c.style.left = '0px';
         } else {
             c.style.top = (nextTopIndex * cardDistance) + 'px';
@@ -105,10 +127,11 @@ function moveStackToTarget(card, target) {
 function finishAnimation(els = [], cb) {
     els.forEach(c => {
         c.classList.remove('moving');
-        c.style.transform    = 'none';
-        c.style.transition   = '';
+        c.style.transform = 'none';
+        c.style.transition = '';
     });
     isAnimating = false;
+    flushInputQueue();
     runAutoLogic?.();
     cb?.();
 }

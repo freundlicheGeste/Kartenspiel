@@ -1,0 +1,10 @@
+ALLGEMEIN
+zeit bonus berechnung ändern, für 4:75min gibt es 2356 Punkte, ab 5min sollte es gar
+keine Punkte mehr geben und bei 2min so um die 2000.
+
+Wenn man im Win-Banner auf Highscore klickt, sollte nach dem Schließen trotzdem noch das
+Win-Banner angezeigt werden. Nur wenn im Scoreboard der Replay-Button statt des Schließen
+Buttons gedrückt wird, soll auch das Win-Banner mit geschlossen werden
+
+Beim Wechsel von Lösbar auf Zufall, wird der winStreak zurück gesetzt, weil ein neues Spiel
+gestartet wird. 

@@ -140,6 +140,7 @@ function handleDrop(e) {
  * @param {MouseEvent} e
  */
 function handleMoveLogic(e) {
+    e.preventDefault();
     if (!canAct()) return;
 
     const card = e.currentTarget;

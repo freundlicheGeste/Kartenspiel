@@ -16,7 +16,13 @@ let stockResetCount = 0;
  * Löst resetStockFromWaste() aus wenn der Stock leer ist.
  */
 function revealNextStockCard() {
-    if (!canAct()) return;
+    //if (!canAct()) return;
+    if (gameState.is(GameStates.PAUSIERT)) return;
+
+    if (isAnimating) {
+        queueAction(() => revealNextStockCard());
+        return;
+    }
 
     if (stock.length === 0) {
         resetStockFromWaste();
@@ -25,7 +31,7 @@ function revealNextStockCard() {
 
     const stockPile = document.getElementById('stock-pile');
     const wastePile = document.getElementById('waste-pile');
-    const cardEl    = stockPile.lastElementChild;
+    const cardEl = stockPile.lastElementChild;
     if (!cardEl) return;
 
     recordStep('S');
@@ -37,8 +43,8 @@ function revealNextStockCard() {
     // Delta für die Flip-Animation berechnen
     const stockRect = stockPile.getBoundingClientRect();
     const wasteRect = wastePile.getBoundingClientRect();
-    const deltaX    = wasteRect.left - stockRect.left;
-    const deltaY    = wasteRect.top  - stockRect.top;
+    const deltaX = wasteRect.left - stockRect.left;
+    const deltaY = wasteRect.top - stockRect.top;
 
     const cardData = stock.pop();
 
@@ -46,14 +52,14 @@ function revealNextStockCard() {
     applyCardFront(cardEl, cardData);
 
     // Slide-Animation
-    cardEl.style.opacity    = '1';
-    cardEl.style.filter     = 'none';
+    cardEl.style.opacity = '1';
+    cardEl.style.filter = 'none';
     cardEl.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.1s ease-out';
-    cardEl.style.transform  = `translate(${deltaX}px, ${deltaY}px)`;
+    cardEl.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
     setTimeout(() => {
         cardEl.style.transition = 'none';
-        cardEl.style.transform  = '';
+        cardEl.style.transform = '';
 
         wastePile.appendChild(cardEl);
         if (stock.length === 0) stockPile.classList.add('empty');
@@ -76,8 +82,8 @@ function revealNextStockCard() {
  * Zählt Resets und verhängt Strafpunkte ab dem 3. Reset.
  */
 function resetStockFromWaste() {
-    const wastePile  = document.getElementById('waste-pile');
-    const stockPile  = document.getElementById('stock-pile');
+    const wastePile = document.getElementById('waste-pile');
+    const stockPile = document.getElementById('stock-pile');
     const wasteCards = Array.from(wastePile.children).reverse();
 
     if (wasteCards.length === 0 || isAnimating) return;
