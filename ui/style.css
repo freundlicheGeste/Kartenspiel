@@ -518,3 +518,31 @@
 #game-stacks {
     touch-action: pan-y; /* Erlaubt vertikales Scrollen, aber kein versehentliches Zoomen */
 }
+
+/* Karten: Browser soll kein Scroll/Zoom auf Touch machen */
+.card {
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Stock-Pile ebenfalls */
+#stock-pile {
+    touch-action: none;
+}
+
+/* Gültiges Drop-Ziel beim Drag */
+.touch-drop-valid {
+    outline: 2px solid rgba(46, 213, 115, 0.85);
+    outline-offset: 3px;
+    background: rgba(46, 213, 115, 0.12) !important;
+    border-radius: 6px;
+}
+
+/* Ungültiges Drop-Ziel */
+.touch-drop-invalid {
+    outline: 2px solid rgba(231, 76, 60, 0.5);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
