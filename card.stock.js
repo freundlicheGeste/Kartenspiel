@@ -16,13 +16,7 @@ let stockResetCount = 0;
  * Löst resetStockFromWaste() aus wenn der Stock leer ist.
  */
 function revealNextStockCard() {
-    //if (!canAct()) return;
-    if (gameState.is(GameStates.PAUSIERT)) return;
-
-    if (isAnimating) {
-        queueAction(() => revealNextStockCard());
-        return;
-    }
+    if (!canAct()) return;
 
     if (stock.length === 0) {
         resetStockFromWaste();

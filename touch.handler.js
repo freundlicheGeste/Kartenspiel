@@ -1,104 +1,188 @@
 /* =====================================================
    TOUCH HANDLER
-   Ersetzt Drag & Drop für Touch-Geräte (Tablet, Mobile).
-   Nutzt Pointer Events API — funktioniert für Touch UND Maus.
-   Abhängigkeiten: card.utils.js, card.move.js
+   Vollständige Touch-Unterstützung für Tablet & Mobile.
+
+   Strategie:
+   • touchstart / touchmove / touchend ersetzen Drag & Drop
+   • Tap (< 10px Bewegung) → handleMoveLogic / flipCard
+   • Drag (≥ 10px Bewegung) → Ghost-Karte folgt dem Finger,
+     Drop auf column / foundation via elementFromPoint
+   • draggable=true wird auf Touch-Geräten deaktiviert
+     (verhindert iOS-Safari Ghost-Bug)
+
+   Integration:
+   • Wird von _attachCardEvents() in card.creation.js
+     am Ende aufgerufen: attachTouchEvents(card)
+   • stock-pile onclick bleibt unverändert (kein Drag nötig)
+
+   Abhängigkeiten: card.utils.js, card.move.js,
+                   card.animate.js, app.core.js
 ===================================================== */
 
-let _touchDragCard = null;  // Aktuell gezogene Karte
-let _touchDragStack = [];    // Kartenstapel beim Ziehen
-let _touchClone = null;  // Visuelles Ghost-Element
-let _touchSourceParent = null; // Ursprungs-Container
-let _touchStartX = 0;
-let _touchStartY = 0;
-let _touchOffsetX = 0;
-let _touchOffsetY = 0;
-let _touchMoved = false; // Unterscheidet Tap von Drag
-const TOUCH_DRAG_THRESHOLD = 8; // px Bewegung bis Drag startet
+/* =====================================================
+   GERÄTEERKENNUNG
+===================================================== */
+
+/** true wenn das Gerät Touch unterstützt */
+const IS_TOUCH_DEVICE = ('ontouchstart' in window) ||
+    (navigator.maxTouchPoints > 0);
+
+/* =====================================================
+   ZUSTAND
+===================================================== */
+
+let _td = {
+    active: false,     // Läuft gerade ein Touch-Drag?
+    card: null,      // Angefasste Karte
+    stack: [],        // Kartenstapel (Karte + alles darunter)
+    source: null,      // Ursprungs-Container
+    ghost: null,      // Ghost-DOM-Element
+    startX: 0,
+    startY: 0,
+    cardOffsetX: 0,         // Finger-Position relativ zur Karten-Ecke
+    cardOffsetY: 0,
+    moved: false,     // Schwellwert überschritten?
+    lastTarget: null,      // Zuletzt hervorgehobenes Drop-Ziel
+};
+
+const DRAG_THRESHOLD = 10; // px bis Drag-Modus startet
+
+/* =====================================================
+   ÖFFENTLICHE API — wird von card.creation.js aufgerufen
+===================================================== */
 
 /**
- * Registriert Touch/Pointer-Events an einer Karte.
- * Wird von _attachCardEvents() in card.creation.js aufgerufen.
+ * Registriert Touch-Events an einer Karte.
+ * Ersetzt auf Touch-Geräten das native Drag & Drop.
  * @param {HTMLElement} card
  */
 function attachTouchEvents(card) {
-    card.addEventListener('pointerdown', _onPointerDown, { passive: false });
+    if (!IS_TOUCH_DEVICE) return;
+
+    // Native Drag & Drop auf Touch deaktivieren (iOS-Safari Bug)
+    card.draggable = false;
+
+    card.addEventListener('touchstart', _onTouchStart, { passive: false });
 }
 
-function _onPointerDown(e) {
-    // Nur primärer Zeiger (Finger 1 oder linke Maustaste)
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
+/* =====================================================
+   TOUCH-EVENTS
+===================================================== */
+
+function _onTouchStart(e) {
+    // Nur einzelner Finger
+    if (e.touches.length !== 1) return;
     if (gameState.is(GameStates.PAUSIERT)) return;
 
     const card = e.currentTarget;
-    if (card.classList.contains('back')) return; // Flip läuft via onclick
+    const touch = e.touches[0];
 
-    _touchStartX = e.clientX;
-    _touchStartY = e.clientY;
-    _touchMoved = false;
-    _touchDragCard = card;
+    _td.card = card;
+    _td.startX = touch.clientX;
+    _td.startY = touch.clientY;
+    _td.moved = false;
+    _td.active = false;
 
-    card.setPointerCapture(e.pointerId);
-    card.addEventListener('pointermove', _onPointerMove, { passive: false });
-    card.addEventListener('pointerup', _onPointerUp);
-    card.addEventListener('pointercancel', _cancelDrag);
+    // Offset: wo auf der Karte wurde angefasst?
+    const rect = card.getBoundingClientRect();
+    _td.cardOffsetX = touch.clientX - rect.left;
+    _td.cardOffsetY = touch.clientY - rect.top;
+
+    document.addEventListener('touchmove', _onTouchMove, { passive: false });
+    document.addEventListener('touchend', _onTouchEnd, { once: true });
+    document.addEventListener('touchcancel', _onTouchCancel, { once: true });
 }
 
-function _onPointerMove(e) {
-    if (!_touchDragCard) return;
-    e.preventDefault();
+function _onTouchMove(e) {
+    if (!_td.card) return;
+    e.preventDefault(); // Scroll verhindern während Drag
 
-    const dx = e.clientX - _touchStartX;
-    const dy = e.clientY - _touchStartY;
+    const touch = e.touches[0];
+    const dx = touch.clientX - _td.startX;
+    const dy = touch.clientY - _td.startY;
 
-    // Drag erst starten wenn Schwellwert überschritten
-    if (!_touchMoved && Math.hypot(dx, dy) < TOUCH_DRAG_THRESHOLD) return;
+    // Schwellwert: erst ab 10px wird es ein Drag
+    if (!_td.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
 
-    if (!_touchMoved) {
-        // Drag initialisieren
-        _touchMoved = true;
-        _touchSourceParent = _touchDragCard.parentElement;
-        _touchDragStack = getCardStack(_touchDragCard);
+    if (!_td.moved) {
+        // Drag initialisieren — nur für sichtbare (nicht verdeckte) Karten
+        if (_td.card.classList.contains('back')) {
+            // Verdeckte Karte: kein Drag, nur Tap erlaubt
+            _cancelTouch();
+            return;
+        }
 
-        const rect = _touchDragCard.getBoundingClientRect();
-        _touchOffsetX = _touchStartX - rect.left;
-        _touchOffsetY = _touchStartY - rect.top;
+        // Foundation-Karten: kein Drag von Foundation weg per Touch
+        // (gleiche Logik wie handleMoveLogic)
+        // Wir erlauben es trotzdem — handleDrop prüft validateMove
 
-        _createDragClone(_touchDragCard, _touchDragStack, rect);
+        _td.moved = true;
+        _td.active = true;
+        _td.source = _td.card.parentElement;
+        _td.stack = getCardStack(_td.card);
 
-        // Original-Karten während Drag leicht ausblenden
-        _touchDragStack.forEach(c => c.style.opacity = '0.3');
+        _createGhost(touch.clientX, touch.clientY);
+
+        // Originale Karten leicht ausblenden
+        _td.stack.forEach(c => {
+            c.style.opacity = '0.25';
+            c.style.transition = 'opacity 0.15s';
+        });
     }
 
-    if (_touchClone) {
-        _touchClone.style.left = (e.clientX - _touchOffsetX) + 'px';
-        _touchClone.style.top = (e.clientY - _touchOffsetY) + 'px';
+    // Ghost dem Finger folgen lassen
+    if (_td.ghost) {
+        _td.ghost.style.left = (touch.clientX - _td.cardOffsetX) + 'px';
+        _td.ghost.style.top = (touch.clientY - _td.cardOffsetY) + 'px';
     }
 
     // Drop-Ziel hervorheben
-    _highlightDropTarget(e.clientX, e.clientY);
+    _updateDropHighlight(touch.clientX, touch.clientY);
 }
 
-function _onPointerUp(e) {
-    const card = _touchDragCard;
-    _cleanup(card);
+function _onTouchEnd(e) {
+    document.removeEventListener('touchmove', _onTouchMove);
+    document.removeEventListener('touchcancel', _onTouchCancel);
 
-    if (!_touchMoved) {
-        // War ein Tap → handleMoveLogic simulieren
-        if (card && !card.classList.contains('back')) {
-            const fakeEvent = { currentTarget: card, preventDefault: () => { } };
-            queueAction(() => handleMoveLogic(fakeEvent));
+    const card = _td.card;
+    if (!card) { _resetTouchState(); return; }
+
+    if (!_td.moved) {
+        // ── TAP ──────────────────────────────────────────
+        _resetTouchState();
+
+        if (!canAct()) return;
+
+        if (card.classList.contains('back')) {
+            // Verdeckte Karte umdrehen
+            if (card.parentElement?.classList.contains('column') &&
+                card === card.parentElement.lastElementChild) {
+                flipCard(card);
+            }
+            return;
         }
-        return;
-    }
 
-    // Drop-Ziel ermitteln
-    const target = _getDropTarget(e.clientX, e.clientY);
+        // Sichtbare Karte: Zug-Logik auslösen
+        // handleMoveLogic erwartet e.currentTarget — wir simulieren das
+        _executeTapMove(card);
 
-    if (target && card) {
-        const sourceParent = _touchSourceParent;
+    } else {
+        // ── DRAG-DROP ─────────────────────────────────────
+        const touch = e.changedTouches[0];
+        const target = _getDropTarget(touch.clientX, touch.clientY);
 
-        if (validateMove(card, target)) {
+        _clearDropHighlight();
+        _removeGhost();
+
+        // Karten-Opazität zurücksetzen
+        _td.stack.forEach(c => {
+            c.style.opacity = '';
+            c.style.transition = '';
+        });
+
+        if (target && validateMove(card, target)) {
+            const sourceParent = _td.source;
+
             // Foundation-Schutz (gleiche Logik wie handleDrop)
             if (sourceParent?.classList.contains('foundation')) {
                 card.dataset.tempIgnoreAuto = 'true';
@@ -114,107 +198,172 @@ function _onPointerUp(e) {
             if (target.classList.contains('foundation')) {
                 executeMoveToFoundation(card, target, sourceParent);
             } else {
-                executeMoveToTableau(_touchDragStack, target, sourceParent);
+                executeMoveToTableau(_td.stack, target, sourceParent);
             }
 
             runAutoLogic();
         } else {
-            // Ungültiger Drop → Karten zurückblenden
-            _touchDragStack.forEach(c => c.style.opacity = '');
+            // Ungültiger Drop → visuelles Feedback
             shakeCard(card);
         }
-    } else {
-        // Kein Ziel → Karten zurückblenden
-        _touchDragStack.forEach(c => c.style.opacity = '');
+
+        _resetTouchState();
     }
 }
 
-function _cancelDrag(e) {
-    _touchDragStack.forEach(c => c.style.opacity = '');
-    _cleanup(_touchDragCard);
+function _onTouchCancel() {
+    document.removeEventListener('touchmove', _onTouchMove);
+    _cancelTouch();
 }
 
-function _cleanup(card) {
-    if (card) {
-        card.removeEventListener('pointermove', _onPointerMove);
-        card.removeEventListener('pointerup', _onPointerUp);
-        card.removeEventListener('pointercancel', _cancelDrag);
+/* =====================================================
+   TAP-BEWEGUNGSLOGIK
+   Entspricht handleMoveLogic, aber ohne e.currentTarget
+===================================================== */
+
+function _executeTapMove(card) {
+    if (!canAct()) return;
+    if (card.classList.contains('back')) return;
+
+    // Karte aus Foundation: Shake (kein Tap-Move von Foundation)
+    if (card.parentElement?.classList.contains('foundation')) {
+        shakeCard(card);
+        return;
     }
 
-    _touchClone?.remove();
-    _touchClone = null;
-    _touchDragCard = null;
-    _touchDragStack = [];
-    _touchSourceParent = null;
-    _touchMoved = false;
+    // Priorität 1: Foundation
+    const fTarget = document.getElementById(`f-${card.dataset.suit}`);
+    if (fTarget && validateMove(card, fTarget)) {
+        const sourceParent = card.parentElement;
+        onPlayerMove(card, sourceParent);
+        executeMoveToFoundation(card, fTarget, sourceParent);
+        return;
+    }
 
-    // Drop-Highlights entfernen
-    document.querySelectorAll('.touch-drop-highlight')
-        .forEach(el => el.classList.remove('touch-drop-highlight'));
+    // Priorität 2: Tableau – erste legale Spalte
+    const columns = document.querySelectorAll('.column');
+    for (const col of columns) {
+        if (card.parentElement === col) continue;
+        if (validateMove(card, col)) {
+            const sourceParent = card.parentElement;
+            onPlayerMove(card, sourceParent);
+            executeMoveToTableau(getCardStack(card), col, sourceParent);
+            return;
+        }
+    }
+
+    // Kein legaler Zug
+    shakeCard(card);
 }
 
-/**
- * Erstellt ein Ghost-Element das dem Finger folgt.
- */
-function _createDragClone(card, stack, rect) {
-    const clone = document.createElement('div');
-    clone.className = 'touch-drag-clone';
+/* =====================================================
+   GHOST-ELEMENT
+===================================================== */
 
-    // Für jeden Karte im Stack ein Mini-Abbild
-    stack.forEach((c, i) => {
-        const mini = c.cloneNode(true);
-        mini.style.position = 'absolute';
-        mini.style.top = (i * cardDistance) + 'px';
-        mini.style.left = '0';
-        mini.style.pointerEvents = 'none';
-        clone.appendChild(mini);
-    });
+function _createGhost(x, y) {
+    const card = _td.card;
+    const stack = _td.stack;
+    const rect = card.getBoundingClientRect();
 
-    clone.style.cssText = `
+    const ghost = document.createElement('div');
+    ghost.className = 'touch-ghost';
+    ghost.style.cssText = `
         position: fixed;
         left: ${rect.left}px;
         top:  ${rect.top}px;
         width: ${rect.width}px;
-        height: ${rect.height + (stack.length - 1) * cardDistance}px;
         pointer-events: none;
         z-index: 9999;
-        opacity: 0.85;
-        transform: rotate(2deg) scale(1.03);
-        transition: transform 0.1s;
+        transform: rotate(1.5deg) scale(1.04);
+        transform-origin: top center;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.45));
     `;
 
-    document.body.appendChild(clone);
-    _touchClone = clone;
+    // Für jede Karte im Stack ein Abbild anlegen
+    stack.forEach((c, i) => {
+        const clone = c.cloneNode(true);
+        clone.style.cssText = `
+            position: relative;
+            top: ${i === 0 ? 0 : -(rect.height - cardDistance)}px;
+            margin-bottom: ${i < stack.length - 1 ? -(rect.height - cardDistance) : 0}px;
+            display: block;
+            width: 100%;
+        `;
+        ghost.appendChild(clone);
+    });
+
+    document.body.appendChild(ghost);
+    _td.ghost = ghost;
 }
 
-/**
- * Findet das Drop-Ziel unter den gegebenen Koordinaten.
- */
+function _removeGhost() {
+    _td.ghost?.remove();
+    _td.ghost = null;
+}
+
+/* =====================================================
+   DROP-ZIEL ERKENNUNG & HIGHLIGHTING
+===================================================== */
+
 function _getDropTarget(x, y) {
-    // Clone temporär verstecken damit elementFromPoint darunter schaut
-    if (_touchClone) _touchClone.style.display = 'none';
-    _touchDragStack.forEach(c => c.style.pointerEvents = 'none');
+    // Ghost und Original-Karten kurz ausblenden
+    if (_td.ghost) _td.ghost.style.visibility = 'hidden';
+    _td.stack.forEach(c => c.style.visibility = 'hidden');
 
     const el = document.elementFromPoint(x, y);
 
-    if (_touchClone) _touchClone.style.display = '';
-    _touchDragStack.forEach(c => c.style.pointerEvents = '');
+    if (_td.ghost) _td.ghost.style.visibility = '';
+    _td.stack.forEach(c => c.style.visibility = '');
 
     if (!el) return null;
-
-    // Nächstes column oder foundation Element finden
     return el.closest('.column, .foundation');
 }
 
-/**
- * Hebt das aktuelle Drop-Ziel visuell hervor.
- */
-function _highlightDropTarget(x, y) {
-    document.querySelectorAll('.touch-drop-highlight')
-        .forEach(el => el.classList.remove('touch-drop-highlight'));
-
+function _updateDropHighlight(x, y) {
     const target = _getDropTarget(x, y);
-    if (target && _touchDragCard && validateMove(_touchDragCard, target)) {
-        target.classList.add('touch-drop-highlight');
+
+    // Altes Highlight entfernen
+    _td.lastTarget?.classList.remove('touch-drop-valid', 'touch-drop-invalid');
+
+    if (!target) {
+        _td.lastTarget = null;
+        return;
     }
+
+    const isValid = _td.card && validateMove(_td.card, target);
+    target.classList.add(isValid ? 'touch-drop-valid' : 'touch-drop-invalid');
+    _td.lastTarget = target;
+}
+
+function _clearDropHighlight() {
+    _td.lastTarget?.classList.remove('touch-drop-valid', 'touch-drop-invalid');
+    _td.lastTarget = null;
+}
+
+/* =====================================================
+   HILFSFUNKTIONEN
+===================================================== */
+
+function _cancelTouch() {
+    _td.stack.forEach(c => {
+        c.style.opacity = '';
+        c.style.transition = '';
+    });
+    _clearDropHighlight();
+    _removeGhost();
+    _resetTouchState();
+}
+
+function _resetTouchState() {
+    document.removeEventListener('touchmove', _onTouchMove);
+    document.removeEventListener('touchend', _onTouchEnd);
+    document.removeEventListener('touchcancel', _onTouchCancel);
+
+    _td.active = false;
+    _td.card = null;
+    _td.stack = [];
+    _td.source = null;
+    _td.ghost = null;
+    _td.moved = false;
+    _td.lastTarget = null;
 }

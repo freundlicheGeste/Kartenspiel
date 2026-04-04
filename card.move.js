@@ -137,13 +137,23 @@ function handleDrop(e) {
  * Verarbeitet einen Klick (oder Doppelklick) auf eine Karte.
  * Prüft Foundation (Prio 1) dann Tableau (Prio 2).
  * Visuelles Feedback (shakeCard) wenn kein Zug möglich.
- * @param {MouseEvent} e
+ * @param {MouseEvent|HTMLElement} input - Entweder das Event oder direkt das Element
  */
-function handleMoveLogic(e) {
-    e.preventDefault();
+function handleMoveLogic(input) {
     if (!canAct()) return;
 
-    const card = e.currentTarget;
+    // Falls input ein Event ist, nimm currentTarget. Falls es schon ein Element ist, nimm es direkt.
+    // Falls beides fehlschlägt, ist card null -> wir fangen das ab.
+    const card = (input instanceof HTMLElement) ? input : input?.currentTarget; // alter Code: const card = e.currentTarget;
+
+    if (!card) {
+        console.error("handleMoveLogic: 'card' ist null. Input war:", input);
+        return;
+    }
+
+    // Sicherheits-Check: Ist die Karte noch im DOM?
+    if (!card.isConnected) return;
+
     if (card.classList.contains('back')) return;
 
     // Quelle Foundation: Karten müssen gezogen (Drag) werden

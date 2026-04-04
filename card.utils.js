@@ -4,28 +4,6 @@
    Darf von allen anderen card.*.js importiert/genutzt werden.
 ===================================================== */
 
-// Input-Queue für Klicks während Animationen
-const _inputQueue = [];
-let _queueProcessing = false;
-
-function queueAction(fn) {
-    if (!isAnimating) {
-        fn();
-        return;
-    }
-    // Maximal 1 Aktion queuen (letzte gewinnt)
-    _inputQueue.length = 0;
-    _inputQueue.push(fn);
-}
-
-function flushInputQueue() {
-    if (_inputQueue.length === 0 || _queueProcessing) return;
-    _queueProcessing = true;
-    const fn = _inputQueue.shift();
-    fn?.();
-    _queueProcessing = false;
-}
-
 /* ---- Guard ---------------------------------------- */
 
 /**
@@ -131,7 +109,6 @@ function finishAnimation(els = [], cb) {
         c.style.transition = '';
     });
     isAnimating = false;
-    flushInputQueue();
     runAutoLogic?.();
     cb?.();
 }

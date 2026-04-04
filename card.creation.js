@@ -53,43 +53,50 @@ function createCardElement(data, isBack = false, index = 0, isUndo = false) {
  * @param {HTMLElement} card
  */
 function _attachCardEvents(card) {
-    // Einfachklick: Karte umdrehen ODER bewegen (je nach Konfiguration)
+
+    // ── KLICK (nur Desktop / Maus) ────────────────────────────────
     card.onclick = e => {
-        // Tap-Handling übernimmt touch.handler.js via pointerdown/up
-        // onclick nur für Maus-Klicks ohne Drag
-        if (_touchMoved) return; // War ein Drag, kein Klick
-        if (gameState.is(GameStates.PAUSIERT)) return;
+        // Auf Touch-Geräten: touch_handler.js übernimmt alles
+        if (IS_TOUCH_DEVICE) return;
+
+        if (!canAct()) return;
 
         if (card.classList.contains('back')) {
-            // Nur die oberste Karte einer Spalte darf umgedreht werden
             if (card.parentElement.classList.contains('column') &&
                 card === card.parentElement.lastElementChild) {
-                queueAction(() => flipCard(card));
+                flipCard(card);
             }
             return;
         }
 
         if (!kts.cfg.smartDblClick) {
-            queueAction(() => handleMoveLogic(e));
+            handleMoveLogic(e);
         }
     };
 
-    // Doppelklick: nur wenn smartDblClick aktiv
-    if (kts.cfg.smartDblClick) {
-        card.ondblclick = e => queueAction(() => handleMoveLogic(e));
+    // Doppelklick: nur wenn smartDblClick aktiv (Desktop)
+    if (kts.cfg.smartDblClick && !IS_TOUCH_DEVICE) {
+        card.ondblclick = handleMoveLogic;
     }
 
-    // Bestehende Maus-Drag-Events bleiben für Desktop
-    card.draggable = true;
-    card.ondragstart = e => {
-        if (gameState.is(GameStates.PAUSIERT)) {
-            e.preventDefault();
-            return;
-        }
-        e.dataTransfer.setData('text', card.dataset.cardId);
-    };
+    // ── DRAG & DROP (nur Desktop) ─────────────────────────────────
+    if (!IS_TOUCH_DEVICE) {
+        card.draggable = true;
+        card.ondragstart = e => {
+            if (!canAct()) {
+                e.preventDefault();
+                return;
+            }
+            e.dataTransfer.setData('text', card.dataset.cardId);
+        };
+    } else {
+        // Touch-Geräte: kein natives Drag (iOS-Safari Ghost-Bug)
+        card.draggable = false;
+    }
 
-    // Touch-Events für Mobile/Tablet
+    // ── TOUCH (Tablet / Mobile) ───────────────────────────────────
+    // attachTouchEvents ist in touch_handler.js definiert
+    // und registriert touchstart — macht auf Desktop nichts (IS_TOUCH_DEVICE Guard)
     attachTouchEvents(card);
 }
 

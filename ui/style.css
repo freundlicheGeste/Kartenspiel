@@ -475,24 +475,46 @@
     user-select: none;
 }
 
-/* Verhindert, dass der Browser das Scrollen/Zoomen startet, 
-   während man Karten bewegt */
-.card, .slot, #game-board {
-    touch-action: none;
-    user-select: none; /* Verhindert Textmarkierungen beim Ziehen */
+/* =====================================================
+   TOUCH HANDLER CSS
+   In ui/style.css oder eine eigene Datei einfügen.
+   Laden in index.html: <link rel="stylesheet" href="styles/touch.css">
+===================================================== */
+
+/* Ghost-Element das dem Finger folgt */
+.touch-ghost {
+    border-radius: 6px;
+    /* Karten-Abstand im Ghost passt sich cardDistance an */
+    overflow: visible;
+}
+
+/* Gültiges Drop-Ziel — grün hervorheben */
+.touch-drop-valid {
+    outline: 2px solid rgba(46, 213, 115, 0.85);
+    outline-offset: 3px;
+    background: rgba(46, 213, 115, 0.12) !important;
+    border-radius: 6px;
+    transition: outline 0.1s, background 0.1s;
+}
+
+/* Ungültiges Drop-Ziel — rot hervorheben */
+.touch-drop-invalid {
+    outline: 2px solid rgba(231, 76, 60, 0.6);
+    outline-offset: 3px;
+    border-radius: 6px;
+    transition: outline 0.1s;
+}
+
+/* Verhindert ungewollte Text-/Element-Selektion beim Drag */
+.card {
     -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none; /* iOS: kein Context-Menu beim langen Drücken */
+    touch-action: none;          /* Verhindert Scroll während Touch-Drag auf der Karte */
 }
 
-/* Touch Drag Clone */
-.touch-drag-clone {
-    border-radius: 6px;
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
-}
-
-/* Drop-Ziel Highlight beim Touch-Drag */
-.touch-drop-highlight {
-    outline: 2px solid rgba(255, 215, 0, 0.8);
-    outline-offset: 2px;
-    background: rgba(255, 215, 0, 0.1);
-    border-radius: 6px;
+/* Spielfeld: scroll-Verhalten nur wenn KEIN Drag läuft */
+#game-board,
+#game-stacks {
+    touch-action: pan-y; /* Erlaubt vertikales Scrollen, aber kein versehentliches Zoomen */
 }
