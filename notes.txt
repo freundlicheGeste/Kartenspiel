@@ -1,3 +1,9 @@
+body align items center
+app wrapper width 720px
+
+
+
+
 XPManager & GameStateManager nutzen !
 
 

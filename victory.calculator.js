@@ -70,7 +70,7 @@ const VictoryCalculator = Object.freeze({
         if (seconds <= 0 || isNaN(seconds)) return 0;
         /*const maxTime = 600; // 10 Minuten
         return Math.max(0, Math.floor(200 * (1 - seconds / maxTime)));*/
-        return seconds > 0 ? Math.floor(700000 / seconds) : 0;
+        return seconds > 0 ? Math.floor(400000 / seconds) : 0;
     },
 
     /**
