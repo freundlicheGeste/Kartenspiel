@@ -1,6 +1,5 @@
 :root {
     --website-background: #2e7d32;
-    /* Nur noch Fallback; echte Kartenmaße kommen von #app-wrapper (fluid) */
     --app-width: 100%;
 
     --card-height: 130px;
@@ -55,11 +54,10 @@ body.lock-scroll {
     overflow: hidden;
 }
 
-/* 3. App-Container (Die "Leinwand") — volle Fensterbreite, Karten skalieren mit */
+/* 3. App-Container (Die "Leinwand") — volle Fensterbreite; Kartenmaße bleiben :root (90×130), kein 100%-Calc hier (Flex+min-width:0 macht % sonst kaputt). */
 #app-wrapper {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
     margin-inline: 0;
 
     flex: 1 0 auto;
@@ -67,23 +65,6 @@ body.lock-scroll {
     flex-direction: column;
     position: relative;
     box-sizing: border-box;
-
-    /*
-     * Gleiche Kartenbreite für Tableau (7 Spalten + 6× Gap) und Kopfzeile
-     * (6 Kartenflächen + 4× Gap + min. 100px Mitte).
-     */
-    --layout-gap: 14px;
-    --board-gaps-total: calc(6 * var(--layout-gap));
-    --stacks-extra: calc(4 * var(--layout-gap) + 100px);
-    --card-width: max(
-        36px,
-        min(
-            calc((100% - var(--stacks-extra)) / 6),
-            calc((100% - var(--board-gaps-total)) / 7)
-        )
-    );
-    --card-height: calc(var(--card-width) * 130 / 90);
-    --min-height-columns: max(160px, calc(var(--card-height) * 2.87));
 
     min-height: 100%;
     min-height: 100vh;
@@ -121,16 +102,30 @@ body.lock-scroll {
     pointer-events: auto;
 }
 
-/* Spielfeld: keine horizontale Scroll-Leiste — Breite passt über --card-width */
+/*
+ * Kein overflow-x: hidden: würde overflow-y auf auto setzen und das Tableau vertikal abschneiden.
+ * Auf schmalen Screens nur horizontal scrollen (siehe Media Query unten).
+ */
 #game-play-scroll {
     max-width: 100%;
     min-width: 0;
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: visible;
 }
 
 #game-play-inner {
     width: 100%;
-    min-width: 0;
     box-sizing: border-box;
+}
+
+@media (max-width: 740px) {
+    #game-play-inner {
+        min-width: calc(7 * var(--card-width) + 6 * 14px);
+        width: max-content;
+        max-width: none;
+    }
+
+    #game-play-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
