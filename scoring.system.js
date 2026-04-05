@@ -197,7 +197,7 @@ let _isAutoMove = false;
  *
  * @param {'FLIP'|'FOUNDATION'} type
  */
-function processComboNEWEST(type) {
+function processCombo(type) {
     if (gameState.is(GameStates.DEMO)) return;
     if (_isAutoMove) return; // Auto-Züge zählen nicht als Combo
 
