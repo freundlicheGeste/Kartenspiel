@@ -7,13 +7,40 @@ const assets = [
     './manifest.json',
     './ui/logo.svg',
 
-    // CSS - Core
+    // CSS - Core & Systems
     './ui/appWrapper.css',
     './ui/root.css',
-    './ui/style.css',
+    './core/systems/autoSolve/autoSolve.css',
+    './core/systems/hints/gameHints.css',
+    './core/systems/history/gameUndoRedo.css',
+    './core/systems/messages/gameMessages.css',
 
-    // CSS - Systems
+    // CSS - Engine
+    './engine/cards/cardDesign.css',
+    './engine/cards/dealCards.css',
+    './ui/animations/cards/cardAnimations.css',
+
+    // CSS - UI & Player
+    './player/scoreboard/scoreboard.css',
     './ui/animations/highscore.css',
+    './ui/components/buttonBar/buttonBar.css',
+    './ui/components/infoBars/infoBars.css',
+    './ui/components/infoTicker/info-ticker.css',
+    './ui/components/statusBar/statusBar.css',
+    './ui/screens/startScreen/startScreen.css',
+
+    // CSS - Dialogs & Panels
+    './basePanel/dialogs/winDialog.css',
+    './basePanel/dialogs/infoDialog.css',
+    './basePanel/panels/changelogPanel.css',
+    './basePanel/panels/infoPanel.css',
+    './ui/replacements/title.css',
+    './basePanel/basePanel.css',
+    './basePanel/controls/panelControls.css',
+    './basePanel/dialogs/inputDialog.css',
+
+    // CSS - Legacy / Styles Folder
+    './ui/style.css',
     './styles/animations/cardNoActionAnimation.css',
     './styles/animations/pulseEffect.css',
     './styles/design/cardDesign.css',
@@ -22,50 +49,32 @@ const assets = [
     './styles/xpSystem/levelUp.css',
     './styles/stapelIndex.css',
 
-    // CSS - Engine
-    './engine/cards/cardDesign.css',
-    './engine/cards/dealCards.css',
-    './ui/animations/cards/cardAnimations.css',
+    // JS - Development & Stubs
+    './dev.logs.js',
+    './ui_stubs.js',
 
-    // CSS - UI Components
-    './player/scoreboard/scoreboard.css',
-    './ui/components/buttonBar/buttonBar.css',
-    './ui/components/infoBars/infoBars.css',
-    './ui/components/infoTicker/info-ticker.css',
-    './ui/components/statusBar/statusBar.css',
-    './ui/screens/startScreen/startScreen.css',
-    './ui/replacements/title.css',
-
-    // CSS - BasePanel
-    './basePanel/basePanel.css',
-    './basePanel/controls/panelControls.css',
-    './basePanel/dialogs/winDialog.css',
-    './basePanel/dialogs/infoDialog.css',
-    './basePanel/dialogs/inputDialog.css',
-    './basePanel/panels/changelogPanel.css',
-    './basePanel/panels/infoPanel.css',
-
-    // JS - Basis (keine Abhängigkeiten)
+    // JS - Utilities & Math
     './deck.utils.js',
     './card.utils.js',
+    './victory.calculator.js',
+    './input.tracking.js',
 
-    // JS - App-Schicht
-    './app.storage.js',
+    // JS - Core & Scoring
     './app.core.js',
+    './scoring.system.js',
     './app.ui.js',
 
-    // JS - Karten
+    // JS - Cards & Touch
+    './touch.handler.js',
     './card.creation.js',
     './card.animate.js',
     './card.stock.js',
     './card.move.js',
     './card.deal.js',
 
-    // JS - Deck
+    // JS - Deck & Game State
     './deck.generator.js',
     './deck.manager.js',
-
-    // JS - Game State
     './game.state.js',
     './game.reset.js',
     './game.running.js',
@@ -74,34 +83,27 @@ const assets = [
     './game.quit.js',
     './game.init.js',
 
-    // JS - Scoring & Messaging
-    './scoring.system.js',
+    // JS - Systems & Mechanics
     './game.messages.js',
     './game.hints.js',
     './game.undo.js',
+    './game.undo.penalty.js',
+    './game.shuffle.js',
     './game.autosolve.js',
     './game.registration.js',
     './game.scoreboard.js',
     './game.xp.js',
 
-    // JS - UI & Animationen
+    // JS - UI, Animation & Audio
     './ui.animations.js',
-
-    // JS - Audio
     './audio/GameAudioManager.js',
     './audio/gameSounds.js',
 
-    // JS - Daten
+    // JS - Data & Engine
     './core/data/hardcodedDecks.js',
-
-    // JS - Engine & Input
     './engine/input/keyboardShortcuts.js',
 
-    // JS - Player
-    './player/levelTitles.js',
-    './player/rewards.js',
-
-    // JS - UI-Komponenten
+    // JS - UI Components
     './ui/components/buttonBar/buttonBar.js',
     './ui/components/infoBars/infoBars.js',
     './ui/components/infoTicker/info-ticker.js',
@@ -109,12 +111,12 @@ const assets = [
 
     // JS - Developer Tools
     './developer/debugFunctions.js',
-    './developer/devLogs.js',
     './developer/devMode.js',
     './developer/loggingSystem.js',
     './developer/recordGame.js',
 
-    // JS - Unsortiert & App Base
+    // JS - Unsortiert & Legacy
+    './unsortiert/code/appBase/localStorage.js',
     './unsortiert/code/appBase/cheating.js',
     './unsortiert/code/toggleBanner.js',
     './unsortiert/dialogs/dialogManager.js',
@@ -134,6 +136,9 @@ const assets = [
     './basePanel/dialogs/confirmDialog.js',
     './basePanel/dialogs/infoDialog.js',
     './basePanel/dialogs/inputDialog.js',
+
+    // JS - Final App Layer
+    './app.storage.js',
 ];
 
 // Install: Cache befüllen, sofort aktivieren

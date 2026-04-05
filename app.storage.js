@@ -131,7 +131,13 @@ function initStorage() {
             const parsed = JSON.parse(savedData);
 
             if (parsed.sys) Object.assign(kts.sys, parsed.sys);
-            if (parsed.cfg) Object.assign(kts.cfg, parsed.cfg);
+            if (parsed.cfg) {
+                // Top-Level-Config mergen, verschachtelte Teilobjekte separat,
+                // damit Defaults wie audio.volEffects erhalten bleiben.
+                const { audio, ...flatCfg } = parsed.cfg;
+                Object.assign(kts.cfg, flatCfg);
+                if (audio) Object.assign(kts.cfg.audio, audio);
+            }
 
             _lastSavedCardDesign = kts.cfg.designBack + kts.cfg.designFront;
 

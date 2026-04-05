@@ -12,8 +12,8 @@ let wasAutoSolved = false;
    AUDIO
 ===================================================== */
 
-const _magicCollectSound     = new Audio('https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3');
-_magicCollectSound.volume    = 0.15;
+const _magicCollectSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3');
+_magicCollectSound.volume = 0.15;
 
 function _playMagicCollectSound() {
     if (kts.cfg.audio.mute) return;
@@ -70,7 +70,7 @@ function removeAutoSolveButton() {
     btn.classList.add('hidden');
     btn.classList.remove('processing');
     btn.style.pointerEvents = 'auto';
-    btn.style.transform     = '';
+    btn.style.transform = '';
 }
 
 /* =====================================================
@@ -87,7 +87,7 @@ async function handleAutoSolveClick() {
 
     btn.classList.add('processing');
     btn.style.pointerEvents = 'none';
-    btn.style.transform     = 'scale(0.9)';
+    btn.style.transform = 'scale(0.9)';
 
     _playMagicCollectSound();
 
@@ -103,8 +103,6 @@ async function handleAutoSolveClick() {
  * Läuft als async do-while-Loop mit 80ms Delay pro Karte.
  */
 async function startAutoSolve() {
-    wasAutoSolved = true;
-
     const btn = document.getElementById('auto-finish-btn');
     if (btn) btn.classList.add('hidden');
 
@@ -123,7 +121,7 @@ async function startAutoSolve() {
         ));
 
         for (const card of cards) {
-            const target       = document.getElementById(`f-${card.dataset.suit}`);
+            const target = document.getElementById(`f-${card.dataset.suit}`);
             const sourceParent = card.parentElement;
 
             if (validateMove(card, target)) {
@@ -142,7 +140,7 @@ async function startAutoSolve() {
     if (btn) {
         btn.classList.remove('processing');
         btn.style.pointerEvents = 'auto';
-        btn.style.transform     = '';
+        btn.style.transform = '';
     }
 
     // Fail-Safe: Wenn nicht alle 52 Karten in der Foundation gelandet sind
@@ -150,6 +148,8 @@ async function startAutoSolve() {
         triggerGameMsg('Blockiert! Manuelle Hilfe nötig.');
         gameState.set(GameStates.RUNNING);
         _startGameTimer?.();
+    } else {
+        wasAutoSolved = true;
     }
 }
 
@@ -169,7 +169,7 @@ function _executeTurboMove(card, sourceParent, target) {
     card.classList.add('moving');
 
     const isFromTableau = sourceParent.classList.contains('column');
-    const pointKey      = isFromTableau
+    const pointKey = isFromTableau
         ? ACTION.TABLEAU_TO_FOUNDATION
         : ACTION.WASTE_TO_FOUNDATION;
 
@@ -181,8 +181,8 @@ function _executeTurboMove(card, sourceParent, target) {
     setTimeout(() => {
         card.classList.remove('moving');
         card.style.transform = 'none';
-        card.style.top       = '0px';
-        card.style.left      = '0px';
+        card.style.top = '0px';
+        card.style.left = '0px';
 
         if (document.querySelectorAll('.foundation .card').length === 52) {
             executeWinSequence?.();

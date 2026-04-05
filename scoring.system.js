@@ -213,48 +213,6 @@ function processComboNEWEST(type) {
     _lastComboTime = now;
 
     if (_comboCount >= 3) {
-        const bonusKey = type === 'FLIP' ? BONUS.FLIP_COMBO : BONUS.FOUNDATION_COMBO;
-        const bonus = getScoreValue(PointType.BONUS, bonusKey);
-        updateScore(bonus);
-        triggerGameMsg(bonusKey, bonus);
-        logExtraPoints(`COMBO [${bonusKey}: ${bonus}]`);
-
-        // sessionStats aktualisieren (SSOT: victory_calculator.js)
-        if (type === 'FLIP') {
-            sessionStats.flipComboCount++;
-            sessionStats.flipComboPoints += bonus;
-        } else {
-            sessionStats.foundationComboCount++;
-            sessionStats.foundationComboPoints += bonus;
-        }
-
-        _comboCount = 0;
-    }
-}
-
-function processCombo(type) {
-    if (gameState.is(GameStates.DEMO)) return;
-
-    const now = Date.now();
-    const isFlip = type === 'FLIP';
-    const timeKey = isFlip ? 'lastFlipTime' : 'lastFoundationTime';
-    const countKey = isFlip ? 'flipWindowCount' : 'foundationWindowCount';
-
-    // Zeitfenster prüfen (3000ms)
-    if (now - sessionStats[timeKey] < 3000) {
-        sessionStats[countKey]++;
-    } else {
-        sessionStats[countKey] = 1; // Reset auf 1, da dies die erste Aktion der neuen Kette ist
-    }
-    sessionStats[timeKey] = now;
-
-    // Schwellenwerte prüfen
-    const threshold = isFlip ? 2 : 3;
-    const bonusKey = isFlip ? BONUS.FLIP_COMBO : BONUS.FOUNDATION_COMBO;
-    const points = getScoreValue(PointType.BONUS, bonusKey);
-
-    if (sessionStats[countKey] >= threshold) {
-
         // Stats für den Endbildschirm speichern
         if (isFlip) {
             sessionStats.flipComboCount++;
@@ -262,31 +220,22 @@ function processCombo(type) {
             sessionStats.foundationComboCount++;
         }
 
-        // --- PURISTEN-CHECK ---
-        // Punkte und Log NUR, wenn die entsprechende Automatik AUS ist
-        const isAutoActive = isFlip ? kts.cfg.autoFlip : kts.cfg.autoFoundation;
-        const comboLabel = isFlip ? "FLIP_COMBO" : "FOUNDATION_COMBO";
-        const comboType = isFlip ? "Auto-Flip" : "Auto-Ablegen";
+        if (!_isAutoMove) {
+            const bonusKey = type === 'FLIP' ? BONUS.FLIP_COMBO : BONUS.FOUNDATION_COMBO;
+            const bonus = getScoreValue(PointType.BONUS, bonusKey);
+            updateScore(bonus);
+            triggerGameMsg(bonusKey, bonus);
+            logExtraPoints(`COMBO [${bonusKey}: ${bonus}]`);
 
-        if (!isAutoActive) {
-            // Punkte NUR sammeln, wenn NICHT im Auto-Modus
-            if (isFlip) {
-                sessionStats.flipComboPoints += points;
-                devLog(`Flip: ${sessionStats.flipComboPoints}`);
+            // sessionStats aktualisieren (SSOT: victory_calculator.js)
+            if (type === 'FLIP') {
+                sessionStats.flipComboPoints += bonus;
             } else {
-                sessionStats.foundationComboPoints += points;
-                devLog(`Found: ${sessionStats.foundationComboPoints}`);
+                sessionStats.foundationComboPoints += bonus;
             }
-
-            // Visuelles Feedback für den Spieler
-            triggerGameMsg(bonusKey);
-            // Punkte im Spiele-Log eintragen
-            logExtraPoints(`${comboLabel} [${points}]`);
-        } else {
-            // Optional: Ein stilles Log für dich zum Debuggen
-            devLog(`${comboLabel} erkannt, aber 0 Punkte wegen aktivem ${comboType}.`);
-            devLog(`Flip: ${sessionStats.flipComboPoints} & Found: ${sessionStats.foundationComboPoints}`);
         }
+
+        _comboCount = 0;
     }
 }
 
