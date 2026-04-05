@@ -1,25 +1,25 @@
 :root {
     --website-background: #2e7d32;
-    --app-width: 720px;
-    
-    /* Berechnung: App-Breite minus zb. 10px (5px links + 5px rechts) */
-    /*--width-game-board: calc(var(--app-width) - 10px);*/
+    /* Nur noch Fallback; echte Kartenmaße kommen von #app-wrapper (fluid) */
+    --app-width: 100%;
 
     --card-height: 130px;
     --card-width: 90px;
-    --min-height-columns: 374px; /* Kartenstapel Höhe (ohne Ass) */
+    --min-height-columns: 374px;
 
     --status-bar-height: 63px;
 
-    /* Platz für fixierte untere Leiste (Münze + Undo/Redo) + Safe Area */
     --bottom-action-clearance: calc(72px + env(safe-area-inset-bottom, 0px));
 }
 
 /* Höhenkette: Firefox/Chrome/Safari — gleiche Basis wie 100% Viewport */
 html {
     height: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    touch-action: manipulation;
 }
 
 /* 1. Globaler Reset (WICHTIG!) */
@@ -36,10 +36,15 @@ body {
     flex-direction: column;
     font-family: 'Segoe UI', sans-serif;
     user-select: none;
+    touch-action: manipulation;
 
     align-items: stretch;
     justify-content: flex-start;
     margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+
     min-height: 100%;
     min-height: 100vh;
     min-height: 100dvh;
@@ -50,12 +55,12 @@ body.lock-scroll {
     overflow: hidden;
 }
 
-/* 3. App-Container (Die "Leinwand") */
+/* 3. App-Container (Die "Leinwand") — volle Fensterbreite, Karten skalieren mit */
 #app-wrapper {
-    /* Mobil: volle Gerätebreite; Desktop: max. 720px, zentriert */
     width: 100%;
-    max-width: min(var(--app-width), 100%);
-    margin-inline: auto;
+    max-width: 100%;
+    min-width: 0;
+    margin-inline: 0;
 
     flex: 1 0 auto;
     display: flex;
@@ -63,13 +68,28 @@ body.lock-scroll {
     position: relative;
     box-sizing: border-box;
 
-    /* Mindesthöhe = sichtbarer Viewport (Reihenfolge: alte Browser → dvh) */
+    /*
+     * Gleiche Kartenbreite für Tableau (7 Spalten + 6× Gap) und Kopfzeile
+     * (6 Kartenflächen + 4× Gap + min. 100px Mitte).
+     */
+    --layout-gap: 14px;
+    --board-gaps-total: calc(6 * var(--layout-gap));
+    --stacks-extra: calc(4 * var(--layout-gap) + 100px);
+    --card-width: max(
+        36px,
+        min(
+            calc((100% - var(--stacks-extra)) / 6),
+            calc((100% - var(--board-gaps-total)) / 7)
+        )
+    );
+    --card-height: calc(var(--card-width) * 130 / 90);
+    --min-height-columns: max(160px, calc(var(--card-height) * 2.87));
+
     min-height: 100%;
     min-height: 100vh;
     min-height: 100dvh;
     min-height: -webkit-fill-available;
 
-    /* Inhalt nicht unter fixierte Bottom-Bar legen */
     padding-bottom: var(--bottom-action-clearance);
     padding-left: max(0px, env(safe-area-inset-left, 0px));
     padding-right: max(0px, env(safe-area-inset-right, 0px));
@@ -101,21 +121,16 @@ body.lock-scroll {
     pointer-events: auto;
 }
 
-/*
- * Nur Stock+Tableau horizontal scrollen, wenn die feste Kartenbreite schmaler
- * als der Viewport ist (ohne Karten zu verkleinern).
- */
+/* Spielfeld: keine horizontale Scroll-Leiste — Breite passt über --card-width */
 #game-play-scroll {
     max-width: 100%;
     min-width: 0;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: visible;
-    -webkit-overflow-scrolling: touch;
 }
 
 #game-play-inner {
-    /* 7 Spalten × 90px + 6 × 14px Gap */
-    min-width: calc(7 * var(--card-width) + 6 * 14px);
-    width: max-content;
-    max-width: none;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }

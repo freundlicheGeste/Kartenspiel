@@ -18,7 +18,7 @@
 
     width: max-content;    /* Nimmt exakt die Breite des Textes ein */
     max-width: min(615px, calc(100% - 16px)); /* Bleibt im App-Rahmen auf schmalen Screens */
-    min-width: 250px;      /* Deine Untergrenze */
+    min-width: min(250px, calc(100% - 24px));
     white-space: nowrap;   /* Verhindert das Umbrechen in die zweite Zeile */
     overflow: hidden;      /* Falls der Text doch mal länger als 615px ist */
     text-overflow: ellipsis; /* Fügt ... hinzu, falls max-width erreicht wird */
