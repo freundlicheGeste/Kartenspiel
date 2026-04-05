@@ -48,12 +48,11 @@ body {
     box-sizing: border-box;
     display: flex;
     font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
+    height: auto;
+    inset: 0;
     justify-content: center;
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 100vw;
+    position: absolute;
+    width: auto;
     z-index: 20000;
     /* Animation: */
     opacity: 0;
@@ -85,12 +84,12 @@ body {
     color: var(--text-color);
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    max-height: var(--panel-heigth);
-    max-width: var(--panel-width);
+    height: auto;
+    max-height: min(var(--panel-heigth), 100%);
+    max-width: min(var(--panel-width), 100%);
     padding: 25px;
     position: relative;
-    width: 100vw;
+    width: 100%;
     /* Animation: */
     opacity: 0; /* Start-Sichtbarkeit */
     transform: translateY(-80px); /* Start-Position */

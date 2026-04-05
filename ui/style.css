@@ -38,7 +38,8 @@
     gap: 14px; /* bei 800px App-Breite 25px */
     grid-template-columns: repeat(7, var(--card-width));
     position: relative;
-    justify-content: space-between;
+    /* space-between + schmale Spalten erzeugt riesige Lücken — Spalten links bündig */
+    justify-content: start;
     width: 100%;
     max-width: 100%;
 }
@@ -123,14 +124,16 @@
     transition: transform 0.2s ease;
 }
 
-/* Das Icon für den Stock Pile */
+/* Das Icon für den Stock Pile — mittig im Slot (unabhängig von --card-height) */
 #stock-pile::before {
     content: "";
-    top: 32px;
-    left: 11px;
-    width: 64px;
-    height: 64px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(64px, 72%);
+    height: min(64px, 72%);
     background-image: url('icons/stockPile.svg'); /* Pfad prüfen! (muss relativ zu dieser Datei sein) */
+    background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
     opacity: 0.2;
@@ -139,11 +142,13 @@
 /* Das Icon für den Waste Pile */
 #waste-pile::before {
     content: "";
-    top: 39px;
-    left: 14px;
-    width: 60px;
-    height: 60px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(60px, 72%);
+    height: min(60px, 72%);
     background-image: url('icons/wastePile.svg');
+    background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
     opacity: 0.2;

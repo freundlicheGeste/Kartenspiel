@@ -89,8 +89,9 @@
     top: 400px;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
+    width: min(600px, 92%);
+    height: auto;
+    max-height: min(600px, 70dvh);
     opacity: 0.1; /* Sehr dezent im Hintergrund */
     filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
     transition: transform 3s ease-in-out infinite alternate;

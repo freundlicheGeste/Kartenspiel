@@ -123,7 +123,7 @@
 
 .info-ticker {
     z-index: calc(var(--z-ui) + 20);
-    position: fixed;
+    position: absolute;
 }
 
 /* =========================================================
@@ -142,8 +142,7 @@
    🏆 OVERLAY (Top Layer)
 ========================================================= */
 
-#scoreboard-overlay,
-.level-up-card {
+#scoreboard-overlay {
     z-index: var(--z-overlay);
     position: fixed;
 }
@@ -162,7 +161,8 @@
 /* Das ist ein Overlay → aber UNTER dem eigentlichen Startscreen */
 #start-screen-overlay {
     z-index: calc(var(--z-overlay) - 10);
-    position: fixed;
+    position: absolute;
+    inset: 0;
 }
 
 #start-screen-overlay .main-logo-watermark {

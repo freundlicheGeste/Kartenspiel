@@ -18,14 +18,16 @@
     border-radius: 20px 20px 0 0;
     bottom: -100%;
     box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+    box-sizing: border-box;
     display: flex;
-    height: 99vh;
+    height: 99dvh;
     justify-content: center;
-    
-    /* Zentrierung für 90% Breite */
-    left: 7%; 
-    width: 86%;
-    min-width: 585px;
+    left: 50%;
+    max-width: 100%;
+    min-width: 0;
+    position: fixed;
+    transform: translateX(-50%);
+    width: min(92vw, 950px);
     /* Animation */
     transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -38,9 +40,11 @@
     color: var(--text-color);
     display: flex;
     flex-direction: column;
+    max-width: 100%;
+    min-width: 0;
     padding: 30px 20px;
     text-align: center;
-    width: 950px;
+    width: 100%;
 }
 
 /* ==========================================================================
@@ -87,6 +91,7 @@
    ========================================================================== */
 .sort-tabs {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     justify-content: center;
     margin-bottom: 25px;

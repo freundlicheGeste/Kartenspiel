@@ -1,4 +1,6 @@
 .level-up-card {
+    position: absolute;
+    z-index: 20000;
     left: -200px;
     top: 50%;
     width: 150px;

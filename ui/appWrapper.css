@@ -51,12 +51,30 @@ body.lock-scroll {
     /* Sorgt dafür, dass absolut positionierte Overlays 
        sich an diesem Container ausrichten, nicht am Browserfenster */
     position: relative;
-    /* overflow: hidden; muss deaktiviert sein für die "Karten austeilen" Animation */
-    
+    /* overflow: hidden; bleibt aus: Deal-Animation nutzt negative Offsets */
+
     display: flex;
     flex-direction: column;
     
     /* Jetzt kannst du hier sicher eine Border ziehen */
     border: 2px solid red;
-    flex-direction: column;
+}
+
+/*
+ * Nur Stock+Tableau horizontal scrollen, wenn die feste Kartenbreite schmaler
+ * als der Viewport ist (ohne Karten zu verkleinern).
+ */
+#game-play-scroll {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+#game-play-inner {
+    /* 7 Spalten × 90px + 6 × 14px Gap */
+    min-width: calc(7 * var(--card-width) + 6 * 14px);
+    width: max-content;
+    max-width: none;
 }

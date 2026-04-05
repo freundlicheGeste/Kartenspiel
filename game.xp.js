@@ -124,7 +124,7 @@ function triggerLevelUpAnimation(newLevel) {
         <div style="font-size:1.2em;">LEVEL UP</div>
         <div style="font-size:4em;margin:10px 0;">${newLevel}</div>
         <div style="font-size:0.8em;text-align:center;">NEUER RANG<br>FREIGESCHALTET</div>`;
-    document.body.appendChild(card);
+    (document.getElementById('app-wrapper') || document.body).appendChild(card);
     setTimeout(() => card.remove(), 4000);
 }
 

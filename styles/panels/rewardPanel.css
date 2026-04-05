@@ -1,13 +1,13 @@
 /* Das äußere Overlay / Container */
 #rewards-panel.casino-modal {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
-    max-width: 450px;
+    max-width: min(450px, 100%);
     height: auto;
-    max-height: 90vh;
+    max-height: min(90dvh, 100%);
     background: rgba(42, 59, 38, 0.98); /* Casino-Grün */
     backdrop-filter: blur(10px);
     z-index: 17000; /* Höher als Scoreboard */

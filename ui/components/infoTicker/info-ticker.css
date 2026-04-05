@@ -16,7 +16,7 @@
     min-height: 38px;
 
     width: max-content;    /* Nimmt exakt die Breite des Textes ein */
-    max-width: 615px;      /* Deine gewünschte Obergrenze */
+    max-width: min(615px, calc(100% - 16px)); /* Bleibt im App-Rahmen auf schmalen Screens */
     min-width: 250px;      /* Deine Untergrenze */
     white-space: nowrap;   /* Verhindert das Umbrechen in die zweite Zeile */
     overflow: hidden;      /* Falls der Text doch mal länger als 615px ist */
