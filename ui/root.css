@@ -103,14 +103,14 @@
 
 #controls,
 .start-screen,
-.time-console,
-.coin-display-bottom,
 .info-bar, /* hinter der status bar */
 .info-bar-base, /* hinter der status bar */
 .best-stats-bar {
     z-index: var(--z-ui);
     position: absolute; /* Orientierung am app-wrapper */
 }
+
+/* Münze + Undo/Redo: in #bottom-action-bar, position: fixed (appWrapper.css) */
 
 /* =========================================================
    📊 STATUS / INFO

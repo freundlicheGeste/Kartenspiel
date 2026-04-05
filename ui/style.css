@@ -282,9 +282,8 @@
 /* CODE NUR TEMPORÄR */
 /* Punkteanzeige Coin */
 .coin-display-bottom {
-    bottom: 15px;
-    left: 15px;
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     /* justify-content sorgt dafür, dass Inhalt mittig bleibt */
     justify-content: flex-start; 

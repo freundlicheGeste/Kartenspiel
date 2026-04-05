@@ -10,6 +10,16 @@
     --min-height-columns: 374px; /* Kartenstapel Höhe (ohne Ass) */
 
     --status-bar-height: 63px;
+
+    /* Platz für fixierte untere Leiste (Münze + Undo/Redo) + Safe Area */
+    --bottom-action-clearance: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Höhenkette: Firefox/Chrome/Safari — gleiche Basis wie 100% Viewport */
+html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 /* 1. Globaler Reset (WICHTIG!) */
@@ -19,18 +29,21 @@
     padding: 0;
 }
 
-/* 2. Body als reiner Hintergrund/Zentrierer */
+/* 2. Body: volle Fläche, Wrapper streckt sich (kein vertikales „Schweben“ in Firefox) */
 body {
     background-color: var(--website-background);
+    display: flex;
     flex-direction: column;
     font-family: 'Segoe UI', sans-serif;
     user-select: none;
 
-    /* Flexbox nur noch zum Zentrieren des Wrappers im Fenster */
-    display: flex;
-    align-items: center;     /* Vertikal mittig */
-    justify-content: center; /* Horizontal mittig */
-    min-height: 100dvh;      /* Wichtig, damit 'align-items' greift */
+    align-items: stretch;
+    justify-content: flex-start;
+    margin: 0;
+    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
 }
 /* Sperrt den body (kein Scrollen möglich) */
 body.lock-scroll {
@@ -39,25 +52,53 @@ body.lock-scroll {
 
 /* 3. App-Container (Die "Leinwand") */
 #app-wrapper {
-    /* Begrenzung für große Monitore */
-    max-width: var(--app-width); 
-    
-    /* Flexibilität für Smartphones */
+    /* Mobil: volle Gerätebreite; Desktop: max. 720px, zentriert */
     width: 100%;
+    max-width: min(var(--app-width), 100%);
+    margin-inline: auto;
 
-    min-height: 99dvh;
-    height: 100%;
-
-    /* Sorgt dafür, dass absolut positionierte Overlays 
-       sich an diesem Container ausrichten, nicht am Browserfenster */
-    position: relative;
-    /* overflow: hidden; bleibt aus: Deal-Animation nutzt negative Offsets */
-
+    flex: 1 0 auto;
     display: flex;
     flex-direction: column;
-    
-    /* Jetzt kannst du hier sicher eine Border ziehen */
+    position: relative;
+    box-sizing: border-box;
+
+    /* Mindesthöhe = sichtbarer Viewport (Reihenfolge: alte Browser → dvh) */
+    min-height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+
+    /* Inhalt nicht unter fixierte Bottom-Bar legen */
+    padding-bottom: var(--bottom-action-clearance);
+    padding-left: max(0px, env(safe-area-inset-left, 0px));
+    padding-right: max(0px, env(safe-area-inset-right, 0px));
+
+    /* overflow: hidden; bleibt aus: Deal-Animation nutzt negative Offsets */
+
     border: 2px solid red;
+}
+
+/*
+ * Untere Steuerung: immer am sichtbaren Fensterrand (Tablet Querformat, lange Seite).
+ * Safe-Area für Home-Indicator / Notch.
+ */
+.bottom-action-bar {
+    position: fixed;
+    z-index: calc(var(--z-ui, 1000) + 1);
+    left: max(8px, env(safe-area-inset-left, 0px));
+    right: max(8px, env(safe-area-inset-right, 0px));
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.bottom-action-bar > * {
+    pointer-events: auto;
 }
 
 /*

@@ -1,5 +1,6 @@
 .info-ticker {
-    bottom: 75px; /* soll sich an coin-stats und time-console orientieren*/
+    /* Über fixierter Bottom-Bar + Safe Area (appWrapper --bottom-action-clearance) */
+    bottom: calc(78px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%);
     background: rgba(26, 36, 25, 0.95);
